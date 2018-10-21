@@ -1,7 +1,7 @@
 import React from 'react';
 
 import TreeNode from './TreeNode';
-import defaultTreeStyles from '../defaultTreeStyles';
+import defaultTreeStyles from './defaultTreeStyles';
 
 export class TreeComponent extends React.Component {
     constructor(props) {
@@ -11,6 +11,7 @@ export class TreeComponent extends React.Component {
 
         this.setToggling = this.setToggling.bind(this);
         this.selectNewNode = this.selectNewNode.bind(this);
+
     }
     
     selectNextNode(node) {
