@@ -5,7 +5,7 @@ import { TreeComponent } from '../../src';
 import { setTreeInternalProperties } from '../../src/TreeViewHelpers';
 
 let tree = {
-    name: 'poo',
+    name: 'root',
     $children: [{
         name: 'child1'
     }, {
