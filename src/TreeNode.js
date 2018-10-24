@@ -33,8 +33,9 @@ class TreeNode extends React.Component {
 
                 <div style={nodeTextStyles || {}}>
                     {this.props.node.$children &&
-                        <TreeNodeToggle template={this.props.templates.toggle} setToggling={this.props.setToggling} node={this.props.node} /> }
-                        <TreeNodeContent template={this.props.templates.header} node={this.props.node} iconsEnabled={this.props.iconsEnabled} />
+                        <TreeNodeToggle template={this.props.templates.toggle} setToggling={this.props.setToggling} node={this.props.node} />
+                    }
+                    <TreeNodeContent template={this.props.templates.header} node={this.props.node} iconsEnabled={this.props.iconsEnabled} />
                 </div>
 
                 {this.props.node.$children && this.props.node.$expanded && <ul style={this.props.style.nestedList}> 

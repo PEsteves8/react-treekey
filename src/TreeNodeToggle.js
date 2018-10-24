@@ -1,6 +1,6 @@
 import React from 'react';
 
-import TreeNodeToggleStyles from './TreeNodeToggleStyles';
+import styles from './defaultTreeStyles';
 
 import { defaultToggle } from './TreeViewDefaultTemplates';
 
@@ -22,7 +22,7 @@ class TreeNodeToggle extends React.Component {
     }
 
     render() {
-        return <div onClick={this.onClick} style={TreeNodeToggleStyles.wrapper}>
+        return <div onClick={this.onClick} style={styles.nodeToggleWrapper}>
                     {this.renderToggle()}
                 </div>
      }

@@ -1,54 +1,15 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { TreeComponent } from '../../src';
+import { TreeKey } from '../../src';
 
 import { setTreeInternalProperties } from '../../src/TreeViewHelpers';
-
-let tree = {
-    name: 'root',
-    $children: [{
-        name: 'child1'
-    }, {
-        name: 'child2'
-    }, {
-        name: 'child3'
-    }, {
-        name: 'child4'
-    }, {
-        name: 'child5',
-        $children: [{
-            name: 'grandchild1'
-        },
-        {
-            name: 'grandchild2'
-        },
-        {
-            name: 'grandchild3'
-        },
-        {
-            name: 'grandchild4',
-            children: [{
-                name: 'greatgrandchild1'
-            },
-            {
-                name: 'greatgrandchild2'
-            },
-            {
-                name: 'greatgrandchild3'
-            },
-            {
-                name: 'greatgrandchild4'
-            }]
-
-        }]
-    }]
-}
+import { treeA } from './data';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
 
-        let setupTree = {...tree};
+        let setupTree = {...treeA};
         setTreeInternalProperties(setupTree);
 
         this.state = {
@@ -61,7 +22,7 @@ class App extends React.Component {
     }
 
     onSelectNode(node) {
-        console.log("clicked to select node");
+        
         let { selectedNode } = this.state;
     
         if(selectedNode) {
@@ -88,11 +49,11 @@ class App extends React.Component {
         overflow: "hidden",
         overflowY: "scroll",
         paddingRight: '0',
-        backgroundColor: "#2c323a"}}><TreeComponent 
+        backgroundColor: "#2c323a"}}><TreeKey 
         tree={tree}
         selectedNode={selectedNode}
         onSelectNode={this.onSelectNode}
-        ></TreeComponent></div>
+        ></TreeKey></div>
     }
 }
 

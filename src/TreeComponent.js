@@ -3,7 +3,7 @@ import React from 'react';
 import TreeNode from './TreeNode';
 import defaultTreeStyles from './defaultTreeStyles';
 
-export class TreeComponent extends React.Component {
+export class TreeKey extends React.Component {
     constructor(props) {
         super(props);
 
