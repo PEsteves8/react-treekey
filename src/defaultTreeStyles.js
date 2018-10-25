@@ -25,6 +25,6 @@ export default {
     },
     nestedList: {
         listStyle: 'none',
-        paddingLeft: '13px'
+        paddingLeft: '8px'
     }
 }

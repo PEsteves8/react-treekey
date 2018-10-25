@@ -3,57 +3,95 @@ import { render } from 'react-dom';
 import { TreeKey } from '../../src';
 
 import { setTreeInternalProperties } from '../../src/TreeViewHelpers';
-import { treeA } from './data';
+import { treeA, treeB } from './data';
+
+import styles from './styles';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
 
-        let setupTree = {...treeA};
-        setTreeInternalProperties(setupTree);
+        let setupTreeA = {...treeA};
+        setTreeInternalProperties(setupTreeA);
+
+        let setupTreeB = {...treeB};
+        setTreeInternalProperties(setupTreeB);
+
+
 
         this.state = {
-            tree: setupTree,
-            selectedNode: null,
-            iconsEnabled: true
+            treeA: setupTreeA,
+            treeB: setupTreeB,
+            selectedNodeA: null,
+            selectedNodeB: null
         };
 
-        this.onSelectNode = this.onSelectNode.bind(this);
+        this.onSelectNodeA = this.onSelectNodeA.bind(this);
+        this.onSelectNodeB = this.onSelectNodeB.bind(this);
+
+
+        this.templates = {
+            header(node)  {
+                return <span><i className={node.className}></i>&nbsp;{node.name}</span>
+            }
+        }
     }
 
-    onSelectNode(node) {
+    onSelectNodeA(node) {
         
-        let { selectedNode } = this.state;
+        let { selectedNodeA } = this.state;
     
-        if(selectedNode) {
-          selectedNode.$selected = false;
+        if(selectedNodeA) {
+          selectedNodeA.$selected = false;
         }
     
         node.$selected = true;
     
-        this.setState({ selectedNode: node});
+        this.setState({ selectedNodeA: node});
+    }
+
+    onSelectNodeB(node) {
+        
+        let { selectedNodeB } = this.state;
+    
+        if(selectedNodeB) {
+          selectedNodeB.$selected = false;
+        }
+    
+        node.$selected = true;
+    
+        this.setState({ selectedNodeB: node});
     }
 
     componentWillMount() { // Set the root as the selected node
-        this.setSelectedNodeToRoot();
-     }
-
-    setSelectedNodeToRoot() {
-        this.onSelectNode(this.state.tree);
+        this.onSelectNodeA(this.state.treeA); 
+        this.onSelectNodeB(this.state.treeB);
     }
 
-    render() {
-        const { tree, selectedNode } = this.state;
 
-        return <div style={{marginLeft: '50px',    height: "70vh",
-        overflow: "hidden",
-        overflowY: "scroll",
-        paddingRight: '0',
-        backgroundColor: "#2c323a"}}><TreeKey 
-        tree={tree}
-        selectedNode={selectedNode}
-        onSelectNode={this.onSelectNode}
-        ></TreeKey></div>
+
+    render() {
+        const { treeA, treeB, selectedNodeA, selectedNodeB } = this.state;
+
+        return (
+            <div>
+                <div style={{width: '300px', marginTop: '20px'}}>
+                    <h5 style={{textAlign: 'center', marginBottom: 0}}>Standard Example</h5>
+                    <br />
+                    <div style={styles.treeWrapper}>
+                        <TreeKey tree={treeA} selectedNode={selectedNodeA} onSelectNode={this.onSelectNodeA} />
+                    </div>
+                </div>
+
+                <div style={{width: '300px', marginTop: '20px'}}>
+                    <h5 style={{textAlign: 'center', marginBottom: 0}}>File Explorer Example</h5>
+                    <br />
+                    <div style={styles.treeWrapper}>
+                        <TreeKey templates={this.templates} tree={treeB} selectedNode={selectedNodeB} onSelectNode={this.onSelectNodeB} />
+                    </div>
+                </div>
+            </div>
+        );
     }
 }
 

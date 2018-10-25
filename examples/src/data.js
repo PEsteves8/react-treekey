@@ -53,3 +53,34 @@ export let treeA = {
         }]
     }]
 };
+
+export let treeB = {
+    name: 'react-treekey',
+    type: 'folder',
+    className: 'fas fa-folder',
+    $children: [{
+            name: 'src',
+            type: 'folder',
+            className: 'fas fa-folder',
+            $children: [{
+                name: 'data.js',
+                type: 'js',
+                className: 'fab fa-js'
+            }, {
+                name: 'index.html',
+                type: 'html',
+                className: 'fas fa-code'
+            }, {
+                name: 'index.js',
+                type: 'js',
+                className: 'fab fa-js'
+            }, {
+                name: 'styles.js',
+                type: 'js',
+                className: 'fab fa-js'
+            }]
+    }, {
+        name: 'child2',
+        type: 'other'
+    }]
+}
