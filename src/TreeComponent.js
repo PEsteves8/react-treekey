@@ -3,10 +3,22 @@ import React from 'react';
 import TreeNode from './TreeNode';
 import defaultTreeStyles from './defaultTreeStyles';
 
+import { setTreeInternalProperties } from './TreeViewHelpers';
+
 export class TreeKey extends React.Component {
     constructor(props) {
         super(props);
 
+        this.pristineTree = props.tree;
+
+        this.props.initialExpanded;
+        this.props.initalSelected;
+
+        setTreeInternalProperties(props.tree);
+        this.state = {
+            tree: props.tree
+        };
+console.log(props.tree);
         this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
 
         this.setToggling = this.setToggling.bind(this);
@@ -77,24 +89,26 @@ export class TreeKey extends React.Component {
             node.$expanded = !node.$expanded;
         }
         
-        this.setState({ tree: this.props.tree });
+        this.setState({ tree: this.state.tree });
     }
 
-    
-   
+    componentWillMount() { // Set the root as the selected node
+        this.props.onSelectNode(this.state.tree);
+    }
+
     render() {
         let  style = this.props.styles || defaultTreeStyles;
+        let templates = this.props.templates || {};
         let root;
         if(style) {
             root = style.root;
         } 
-        
+
         return  <ul tabIndex={0}
                     onKeyDown={this.handleOnKeyDown}
                     className="treeview-root"
                     style={root || {}}>
-                    <TreeNode templates={this.props.templates || {}} node={this.props.tree} iconsEnabled={this.props.iconsEnabled} selectNewNode={this.selectNewNode} setToggling={this.setToggling} style={style}/>
+                    <TreeNode selectedNode={this.props.selectedNode} templates={templates} node={this.state.tree} selectNewNode={this.selectNewNode} setToggling={this.setToggling} style={style}/>
                 </ul>
-                              
     }
 }

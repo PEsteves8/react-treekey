@@ -14,22 +14,28 @@ class TreeNode extends React.Component {
         this.props.selectNewNode(this.props.node);
     }
 
+    isSelectedNode() {
+        return this.props.selectedNode === this.props.node;
+    }
+
     render() {
 
         let { style } = this.props;
 
         let nodeTextStyles;
-        
+
+        let isSelectedNode = this.isSelectedNode();
+
         if(style) {
             nodeTextStyles = { ...style.node.default };
 
-            if(this.props.node.$selected) {
+            if(isSelectedNode) {
                 nodeTextStyles = { ...style.node.default, ...style.node.selected };
             }
         }
 
         return <li onClick={this.onClick}
-               className={ `${this.props.node.$selected ? "treeview-selected-node" : ''}` } >
+               className={ `${isSelectedNode ? "treeview-selected-node" : ''}` } >
 
                 <div style={nodeTextStyles || {}}>
                     {this.props.node.$children &&
@@ -48,6 +54,7 @@ class TreeNode extends React.Component {
                                 setToggling={this.props.setToggling}
                                 iconsEnabled={this.props.iconsEnabled}
                                 templates={this.props.templates}
+                                selectedNode={this.props.selectedNode}
                                 />
                     })}
                 </ul> }

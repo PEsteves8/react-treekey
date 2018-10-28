@@ -11,24 +11,13 @@ class App extends React.Component {
     constructor(props) {
         super(props);
 
-        let setupTreeA = {...treeA};
-        setTreeInternalProperties(setupTreeA);
-
-        let setupTreeB = {...treeB};
-        setTreeInternalProperties(setupTreeB);
-
-
-
         this.state = {
-            treeA: setupTreeA,
-            treeB: setupTreeB,
             selectedNodeA: null,
             selectedNodeB: null
         };
 
         this.onSelectNodeA = this.onSelectNodeA.bind(this);
         this.onSelectNodeB = this.onSelectNodeB.bind(this);
-
 
         this.templates = {
             header(node)  {
@@ -38,40 +27,15 @@ class App extends React.Component {
     }
 
     onSelectNodeA(node) {
-        
-        let { selectedNodeA } = this.state;
-    
-        if(selectedNodeA) {
-          selectedNodeA.$selected = false;
-        }
-    
-        node.$selected = true;
-    
-        this.setState({ selectedNodeA: node});
+        this.setState({ selectedNodeA: node });
     }
 
     onSelectNodeB(node) {
-        
-        let { selectedNodeB } = this.state;
-    
-        if(selectedNodeB) {
-          selectedNodeB.$selected = false;
-        }
-    
-        node.$selected = true;
-    
-        this.setState({ selectedNodeB: node});
+        this.setState({ selectedNodeB: node });
     }
-
-    componentWillMount() { // Set the root as the selected node
-        this.onSelectNodeA(this.state.treeA); 
-        this.onSelectNodeB(this.state.treeB);
-    }
-
-
 
     render() {
-        const { treeA, treeB, selectedNodeA, selectedNodeB } = this.state;
+        const { selectedNodeA, selectedNodeB } = this.state;
 
         return (
             <div>
