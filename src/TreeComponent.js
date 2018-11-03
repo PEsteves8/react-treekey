@@ -15,10 +15,12 @@ export class TreeKey extends React.Component {
         this.props.initalSelected;
 
         setTreeInternalProperties(props.tree);
+
         this.state = {
-            tree: props.tree
+            tree: props.tree,
+            selectedNode: null
         };
-console.log(props.tree);
+
         this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
 
         this.setToggling = this.setToggling.bind(this);
@@ -64,7 +66,7 @@ console.log(props.tree);
     }
 
     handleOnKeyDown(e) {
-        let node = this.props.selectedNode;
+        let node = this.props.selectedNode || this.state.selectedNode;
         let handlers = {
             ArrowUp: () => this.selectNextNode(node),
             ArrowDown: () => this.selectPreviousNode(node),
@@ -79,7 +81,11 @@ console.log(props.tree);
     }
 
     selectNewNode(node) {
-       this.props.onSelectNode(node, this.selectedNodeEl);
+        if(!this.props.selectedNode) {
+            this.setState({selectedNode: node});
+        }
+
+        this.props.onSelectNode(node);
     }
 
     setToggling(node, shouldExpand) {
@@ -93,7 +99,7 @@ console.log(props.tree);
     }
 
     componentWillMount() { // Set the root as the selected node
-        this.props.onSelectNode(this.state.tree);
+        this.selectNewNode(this.props.tree);
     }
 
     render() {
@@ -102,13 +108,21 @@ console.log(props.tree);
         let root;
         if(style) {
             root = style.root;
-        } 
+        }
+
+        let selectedNode = this.props.selectedNode || this.state.selectedNode;
 
         return  <ul tabIndex={0}
                     onKeyDown={this.handleOnKeyDown}
                     className="treeview-root"
                     style={root || {}}>
-                    <TreeNode selectedNode={this.props.selectedNode} templates={templates} node={this.state.tree} selectNewNode={this.selectNewNode} setToggling={this.setToggling} style={style}/>
+                    <TreeNode 
+                        selectedNode={selectedNode}
+                        templates={templates}
+                        node={this.state.tree}
+                        selectNewNode={this.selectNewNode}
+                        setToggling={this.setToggling}
+                        style={style} />
                 </ul>
     }
 }

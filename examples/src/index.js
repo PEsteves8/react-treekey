@@ -27,7 +27,7 @@ class App extends React.Component {
     }
 
     onSelectNodeA(node) {
-        this.setState({ selectedNodeA: node });
+       console.log(node);
     }
 
     onSelectNodeB(node) {
@@ -43,7 +43,10 @@ class App extends React.Component {
                     <h5 style={{textAlign: 'center', marginBottom: 0}}>Standard Example</h5>
                     <br />
                     <div style={styles.treeWrapper}>
-                        <TreeKey tree={treeA} selectedNode={selectedNodeA} onSelectNode={this.onSelectNodeA} />
+                        <TreeKey 
+                            tree={treeA}
+                            // selectedNode={selectedNodeA}
+                            onSelectNode={this.onSelectNodeA} />
                     </div>
                 </div>
 
@@ -51,7 +54,12 @@ class App extends React.Component {
                     <h5 style={{textAlign: 'center', marginBottom: 0}}>File Explorer Example</h5>
                     <br />
                     <div style={styles.treeWrapper}>
-                        <TreeKey templates={this.templates} tree={treeB} selectedNode={selectedNodeB} onSelectNode={this.onSelectNodeB} />
+                        <TreeKey
+                            tree={treeB}
+                            selectedNode={selectedNodeB}
+                            onSelectNode={this.onSelectNodeB}
+                            
+                            templates={this.templates}/>
                     </div>
                 </div>
             </div>
