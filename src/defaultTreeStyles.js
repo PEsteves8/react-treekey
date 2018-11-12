@@ -8,7 +8,7 @@ export default {
         default: {
             paddingLeft: '100%',
             marginLeft: '-100%'
-        },
+         },
         selected: {
             backgroundColor: 'grey',
         }

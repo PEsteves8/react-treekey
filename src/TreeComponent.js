@@ -28,7 +28,7 @@ export class TreeKey extends React.Component {
 
     }
     
-    selectNextNode(node) {
+    selectNextNode(node, e) {
 
         function findLastCollapsedChild(node) {
             if(!node.$lastChild || !node.$expanded) return node;
@@ -38,16 +38,16 @@ export class TreeKey extends React.Component {
         if(node.$previousNode && node.$previousNode.$expanded && node.$previousNode.$lastChild ) {
 
             var lastCollapsedChild = findLastCollapsedChild(node.$previousNode);
-            this.selectNewNode(lastCollapsedChild);
+            this.selectNewNode(lastCollapsedChild, e);
             
         } else if(node.$previousNode) {
-            this.selectNewNode(node.$previousNode);
+            this.selectNewNode(node.$previousNode), e;
         } else if (node.$parent) {
-            this.selectNewNode(node.$parent);
+            this.selectNewNode(node.$parent, e);
         } 
     }
 
-    selectPreviousNode(node) {
+    selectPreviousNode(node, e) {
 
         function findFirstParentWithNextNode(node) {
             if (!node.$parent) return;
@@ -56,20 +56,20 @@ export class TreeKey extends React.Component {
         }
 
         if(node.$children && node.$expanded) {
-            this.selectNewNode(node.$firstChild);
+            this.selectNewNode(node.$firstChild, e);
         } else if (node.$nextNode) {
-            this.selectNewNode(node.$nextNode);
+            this.selectNewNode(node.$nextNode, e);
         } else if (node.$parent) {
             let firstParentWithNextNode = findFirstParentWithNextNode(node);
-            if (firstParentWithNextNode) this.selectNewNode(firstParentWithNextNode);
+            if (firstParentWithNextNode) this.selectNewNode(firstParentWithNextNode, e);
         } 
     }
 
     handleOnKeyDown(e) {
         let node = this.props.selectedNode || this.state.selectedNode;
         let handlers = {
-            ArrowUp: () => this.selectNextNode(node),
-            ArrowDown: () => this.selectPreviousNode(node),
+            ArrowUp: () => this.selectNextNode(node, e),
+            ArrowDown: () => this.selectPreviousNode(node, e),
             ArrowLeft: () => this.setToggling(node, false),
             ArrowRight: () => this.setToggling(node, true)
         };
@@ -80,12 +80,14 @@ export class TreeKey extends React.Component {
         }
     }
 
-    selectNewNode(node) {
-        if(!this.props.selectedNode) {
+    selectNewNode(node, e) {
+        if(this.props.selectedNode) {
             this.setState({selectedNode: node});
         }
 
-        this.props.onSelectNode(node);
+        this.props.onSelectNode(node, e);
+        
+        this.setState({ tree: this.state.tree });
     }
 
     setToggling(node, shouldExpand) {
@@ -98,8 +100,9 @@ export class TreeKey extends React.Component {
         this.setState({ tree: this.state.tree });
     }
 
-    componentWillMount() { // Set the root as the selected node
-        this.selectNewNode(this.props.tree);
+    componentWillMount() { 
+        // Set the root as the selected node
+        //    this.selectNewNode(this.props.tree);
     }
 
     render() {
@@ -111,6 +114,7 @@ export class TreeKey extends React.Component {
         }
 
         let selectedNode = this.props.selectedNode || this.state.selectedNode;
+        let selectedNodes = this.props.selectedNodes;
 
         return  <ul tabIndex={0}
                     onKeyDown={this.handleOnKeyDown}
@@ -118,6 +122,7 @@ export class TreeKey extends React.Component {
                     style={root || {}}>
                     <TreeNode 
                         selectedNode={selectedNode}
+                        selectedNodes={selectedNodes}
                         templates={templates}
                         node={this.state.tree}
                         selectNewNode={this.selectNewNode}

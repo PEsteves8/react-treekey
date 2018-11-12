@@ -11,11 +11,16 @@ class TreeNode extends React.Component {
 
     onClick(e) {
         e.stopPropagation();
-        this.props.selectNewNode(this.props.node);
+        this.props.selectNewNode(this.props.node, e);
     }
 
     isSelectedNode() {
-        return this.props.selectedNode === this.props.node;
+        if (this.props.selectedNodes) {
+            return this.props.selectedNodes(this.props.node);
+        } else if (this.props.selectedNode) {
+            return this.props.selectedNode === this.props.node;
+        }
+        
     }
 
     render() {
@@ -55,6 +60,7 @@ class TreeNode extends React.Component {
                                 iconsEnabled={this.props.iconsEnabled}
                                 templates={this.props.templates}
                                 selectedNode={this.props.selectedNode}
+                                selectedNodes={this.props.selectedNodes}
                                 />
                     })}
                 </ul> }
