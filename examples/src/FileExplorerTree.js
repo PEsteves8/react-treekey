@@ -24,7 +24,6 @@ export class FileExplorerTree extends React.Component {
     }
 
     onSelectNode(node) {
-        console.log(node.$nextNode);
         this.setState({ selectedNode: node });
      }
 

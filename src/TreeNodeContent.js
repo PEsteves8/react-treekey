@@ -10,6 +10,6 @@ export default class TreeListItemContent extends React.Component {
     }
 
     render() {
-        return this.renderNodeContent();
+        return <span style={{userSelect: 'none'}}>{this.renderNodeContent()}</span>
     }
 }

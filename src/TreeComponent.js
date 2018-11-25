@@ -41,7 +41,7 @@ export class TreeKey extends React.Component {
             this.selectNewNode(lastCollapsedChild, e);
             
         } else if(node.$previousNode) {
-            this.selectNewNode(node.$previousNode), e;
+            this.selectNewNode(node.$previousNode, e);
         } else if (node.$parent) {
             this.selectNewNode(node.$parent, e);
         } 
@@ -81,7 +81,7 @@ export class TreeKey extends React.Component {
     }
 
     selectNewNode(node, e) {
-        if(this.props.selectedNode) {
+        if(!this.props.selectedNode) {
             this.setState({selectedNode: node});
         }
 
