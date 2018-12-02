@@ -16,7 +16,7 @@ class TreeNode extends React.Component {
 
     isSelectedNode() {
         if (this.props.selectedNodes) {
-            return this.props.selectedNodes(this.props.node);
+            return this.props.selectedNodes.includes(this.props.node);
         } else if (this.props.selectedNode) {
             return this.props.selectedNode === this.props.node;
         }
