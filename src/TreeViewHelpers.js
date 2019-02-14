@@ -1,37 +1,43 @@
-export function setTreeInternalProperties(node, preserveExpanded = false) {
-    if(!preserveExpanded) {
-        if(!node.$parent) {
-            node.$expanded = true;
-        } else {
-            node.$expanded = false;
-        }
+function setProp(node, prop, value) {
+    Object.defineProperty(node, prop, { value, writable: true });
+}
+
+
+export function setTreeInternalProperties(node, expandNode = true) {
+    /*
+    if(expandNode) {
+        Object.defineProperty(node, 'expanded', true);
+    } */
+
+    if(expandNode) {
+        setProp(node, '$expanded', true);
+    } else {
+        setProp(node, '$expanded', false);
     }
     
-    node.$selected = false;
-
     if(node.$children) {
         for(let i = 0; i < node.$children.length; i++) {
-            node.$children[i].$parent = node;
+            setProp(node.$children[i], '$parent', node);
            
             if(node.$children.length === 1) {
-                node.$firstChild = node.$children[i];
-                node.$lastChild = node.$children[i];
-                node.$children[i].$nextNode = null;
-                node.$children[i].$previousNode = null;
+                setProp(node, '$firstChild', node.$children[i]);
+                setProp(node, '$lastChild', node.$children[i]);
+                setProp(node.$children[i], '$nextNode', null);
+                setProp(node.$children[i], '$previousNode', null);
             } else if(i === 0) {
-                node.$firstChild = node.$children[i];
-                node.$children[i].$previousNode = null;
-                node.$children[i].$nextNode = node.$children[i + 1];
+                setProp(node, '$firstChild', node.$children[i]);
+                setProp(node.$children[i], '$previousNode', null);
+                setProp(node.$children[i], '$nextNode', node.$children[i + 1]);
             } else if (i === node.$children.length -1) {
-                node.$lastChild = node.$children[i];
-                node.$children[i].$previousNode = node.$children[i-1];
-                node.$children[i].$nextNode = null;
+                setProp(node, '$lastChild', node.$children[i]);
+                setProp(node.$children[i], '$previousNode', node.$children[i-1]);
+                setProp(node.$children[i], '$nextNode', null);
             } else {
-                node.$children[i].$previousNode = node.$children[i - 1];
-                node.$children[i].$nextNode = node.$children[i+1];
+                setProp(node.$children[i], '$previousNode', node.$children[i-1]);
+                setProp(node.$children[i], '$nextNode', node.$children[i+1]);
             }
 
-            setTreeInternalProperties(node.$children[i], preserveExpanded);
+            setTreeInternalProperties(node.$children[i], false);
         }
     }
 }

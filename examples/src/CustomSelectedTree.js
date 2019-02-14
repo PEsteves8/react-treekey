@@ -31,8 +31,16 @@ export class CustomSelectedTree extends React.Component {
           onSelectNode={this.onSelectNode}
           selectedNodes={this.state.selectedNodes}
           multiSelection={true}
-        />
+        /><button onClick={ () => {
+
+          console.log(JSON.parse(JSON.stringify(treeA)));
+        
+        }
+          
+          }>log json tree</button>
       </div>
+
+      
     );
   }
 }
