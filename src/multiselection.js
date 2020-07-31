@@ -35,7 +35,7 @@ let findCommonParent = (firstNode, secondNode) => {
   }
 };
 
-let getRange = (commonParent, firstNode, secondNode) => {
+let getRange = (commonParent, firstNode, secondNode, expandedNodes) => {
   if (firstNode === secondNode) {
     return [firstNode];
   }
@@ -58,7 +58,7 @@ let getRange = (commonParent, firstNode, secondNode) => {
       result.push(currentNode);
     }
 
-    if (currentNode.$children && currentNode.$expanded) {
+    if (currentNode.$children && expandedNodes.has(currentNode)) {
       currentNode = currentNode.$firstChild;
     } else if (currentNode.$nextNode) {
       currentNode = currentNode.$nextNode;
@@ -70,8 +70,8 @@ let getRange = (commonParent, firstNode, secondNode) => {
   return result;
 };
 
-export function handleKeyModifiers(node, e, selectedNodes) {
-  if (e.ctrlKey) {
+export function handleKeyModifiers(node, e, selectedNodes, expandedNodes) {
+  if (e && e.ctrlKey) {
     if (e.type === "keydown") return;
 
     if (e.type === "click") {
@@ -87,12 +87,12 @@ export function handleKeyModifiers(node, e, selectedNodes) {
       // last selected node is used as the previously clicked node within range selections
       lastSelectedNode = undefined;
     }
-  } else if (e.shiftKey) {
+  } else if (e && e.shiftKey) {
     // First deselect from lastSelectedNode to node
     // First deselect the nodes that should be deselected
     if (lastSelectedNode) {
       let commonParent = findCommonParent(node, lastSelectedNode);
-      let result = getRange(commonParent, node, lastSelectedNode);
+      let result = getRange(commonParent, node, lastSelectedNode, expandedNodes);
 
       result.forEach(item => {
         let idx = selectedNodes.indexOf(item);
@@ -106,7 +106,7 @@ export function handleKeyModifiers(node, e, selectedNodes) {
     // Then select the whole range from the anchor node to the clicked node
     {
       let commonParent = findCommonParent(node, anchorNode);
-      let result = getRange(commonParent, node, anchorNode);
+      let result = getRange(commonParent, node, anchorNode, expandedNodes);
 
       result.forEach(item => {
         if (!selectedNodes.includes(item)) {

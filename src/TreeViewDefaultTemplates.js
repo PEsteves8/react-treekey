@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from './defaultTreeStyles';
 
-export let defaultToggle = node => {
+export let defaultToggle = isExpanded => {
         const svgStyles = {
              fill: 'white',
              strokeWidth: 0,
              transformOrigin: 'center',
-             transform: `rotate(${node.$expanded ? '90deg' : '0'})`
+             transform: `rotate(${isExpanded ? '90deg' : '0'})`
          }
 
      let { height, width, points } = styles.nodeToggleSvg;

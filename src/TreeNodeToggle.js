@@ -17,8 +17,8 @@ class TreeNodeToggle extends React.Component {
     }
 
     renderToggle() {
-        let { template, node } = this.props;
-        return template ? template(node) : defaultToggle(node);
+        let { template, isExpanded } = this.props;
+        return template ? template(isExpanded) : defaultToggle(isExpanded);
     }
 
     render() {

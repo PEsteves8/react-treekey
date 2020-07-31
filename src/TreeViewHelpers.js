@@ -3,18 +3,7 @@ function setProp(node, prop, value) {
 }
 
 
-export function setTreeInternalProperties(node, expandNode = true) {
-    /*
-    if(expandNode) {
-        Object.defineProperty(node, 'expanded', true);
-    } */
-
-    if(expandNode) {
-        setProp(node, '$expanded', true);
-    } else {
-        setProp(node, '$expanded', false);
-    }
-    
+export function setTreeInternalProperties(node) {
     if(node.$children) {
         for(let i = 0; i < node.$children.length; i++) {
             setProp(node.$children[i], '$parent', node);
