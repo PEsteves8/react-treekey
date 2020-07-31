@@ -9,7 +9,7 @@
     "transpile": "babel src -d dist --copy-files",
     "prepublishOnly": "npm run transpile",
     "build": "webpack --mode production",
-    "deploy": "gh-pages -d examples/dist",
+    "deploy": "node ./scripts/deploy-gh-pages",
     "publish-demo": "npm run build && npm run deploy"
   },
   "repository": {
@@ -27,28 +27,27 @@
   "author": "Paulo Esteves <pauloesteves8@gmail.com> (pesteves.github.io)",
   "license": "MIT",
   "peerDependencies": {
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   },
   "bugs": {
     "url": "https://github.com/PEsteves8/react-treekey/issues"
   },
   "homepage": "https://github.com/PEsteves8/react-treekey#readme",
-  "devDependencies": {
-    "@babel/cli": "^7.1.2",
-    "@babel/core": "^7.1.2",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.4",
-    "css-loader": "^1.0.0",
-    "gh-pages": "^2.0.1",
+  "dependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.0",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-react": "^7.10.4",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^1.0.1",
+    "gh-pages": "^3.1.0",
     "html-webpack-plugin": "^3.2.0",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "style-loader": "^0.23.1",
-    "webpack": "^4.21.0",
-    "webpack-cli": "^3.3.8",
-    "webpack-dev-server": "^3.8.0"
-  },
-  "dependencies": {}
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
 }

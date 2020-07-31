@@ -113,14 +113,13 @@ export class TreeKey extends React.Component {
     this.setState({ expandedNodes: new Set(expandedNodes) });
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (!this.isStartingSelectedNodeSet()) {
       // Set the root as the selected node
       this.selectNewNode(this.props.tree);
     }
 
     if(this.state.expandedNodes.size === 0){
-      console.log(this.state.expandedNodes)
       let expandedNodes = this.state.expandedNodes
       expandedNodes.add(this.props.tree)
       this.setState({ expandedNodes })

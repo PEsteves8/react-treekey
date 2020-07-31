@@ -1,0 +1,1 @@
+ghpages.publish('examples/src')
