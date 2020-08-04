@@ -1,15 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { defaultHeader } from './TreeViewDefaultTemplates';
 
 export default class TreeListItemContent extends React.Component {
-
-    renderNodeContent() {
+    render() {
         let { template, node } = this.props;
         return template ? template(node) : defaultHeader(node);
     }
-
-    render() {
-        return <span style={{userSelect: 'none'}}>{this.renderNodeContent()}</span>
-    }
 }
+
+TreeListItemContent.propTypes = {
+    template: PropTypes.func,
+    node: PropTypes.object,
+};

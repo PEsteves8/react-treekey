@@ -1,31 +1,38 @@
 import React from "react";
+import PropTypes from 'prop-types';
 
 import TreeNode from "./TreeNode";
 import defaultTreeStyles from "./defaultTreeStyles";
 
 import { setTreeInternalProperties } from "./TreeViewHelpers";
 
-import { handleKeyModifiers } from "./multiselection";
+import { multiselection } from "./multiselection";
 
 export class TreeKey extends React.Component {
   constructor(props) {
     super(props);
-
-    this.pristineTree = props.tree;
-
+    
     setTreeInternalProperties(props.tree);
-
+    
     this.state = {
       tree: props.tree,
       selectedNode: null,
       selectedNodes: [],
-      expandedNodes: new Set(),
+      expandedNodes: this.props.expandedNodes || new Set(),
     };
-
+    
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
 
     this.setToggling = this.setToggling.bind(this);
     this.selectNewNode = this.selectNewNode.bind(this);
+
+    this.getNodesUsingKeyModifiers = multiselection().getNodesUsingKeyModifiers;
+  }
+
+  findFirstParentsNextNode(node) {
+    if (!node.$parent) return;
+    if (node.$parent && node.$parent.$nextNode) return node.$parent.$nextNode;
+    else return this.findFirstParentsNextNode(node.$parent);
   }
 
   findLastCollapsedChild(node) {
@@ -40,13 +47,13 @@ export class TreeKey extends React.Component {
     return this.state.expandedNodes.has(node)
   }
 
-  selectNextNode(node, e) {
+  selectPreviousNode(node, e) {
     if (
       node.$previousNode &&
       this.isNodeExpanded(node.$previousNode) &&
       node.$previousNode.$lastChild
     ) {
-      var lastCollapsedChild = this.findLastCollapsedChild(node.$previousNode);
+      const lastCollapsedChild = this.findLastCollapsedChild(node.$previousNode);
       this.selectNewNode(lastCollapsedChild, e);
     } else if (node.$previousNode) {
       this.selectNewNode(node.$previousNode, e);
@@ -55,29 +62,23 @@ export class TreeKey extends React.Component {
     }
   }
 
-  selectPreviousNode(node, e) {
-    function findFirstParentWithNextNode(node) {
-      if (!node.$parent) return;
-      if (node.$parent && node.$parent.$nextNode) return node.$parent.$nextNode;
-      else return findFirstParentWithNextNode(node.$parent);
-    }
-
+  selectNextNode(node, e) {
     if (node.$children && this.isNodeExpanded(node)) {
       this.selectNewNode(node.$firstChild, e);
     } else if (node.$nextNode) {
       this.selectNewNode(node.$nextNode, e);
     } else if (node.$parent) {
-      let firstParentWithNextNode = findFirstParentWithNextNode(node);
+      let firstParentWithNextNode = this.findFirstParentsNextNode(node);
       if (firstParentWithNextNode)
         this.selectNewNode(firstParentWithNextNode, e);
     }
   }
 
   handleOnKeyDown(e) {
-    let node = this.props.selectedNode || this.state.selectedNode;
+    let node = this.props.selectedNode || this.state.selectedNode || this.props.selectedNodes[0];
     let handlers = {
-      ArrowUp: () => this.selectNextNode(node, e),
-      ArrowDown: () => this.selectPreviousNode(node, e),
+      ArrowUp: () => this.selectPreviousNode(node, e),
+      ArrowDown: () => this.selectNextNode(node, e),
       ArrowLeft: () => this.setToggling(node, false),
       ArrowRight: () => this.setToggling(node, true)
     };
@@ -87,14 +88,14 @@ export class TreeKey extends React.Component {
       handlers[e.key]();
     }
   }
-
+  
   selectNewNode(node, e) {
     if (!this.props.selectedNode) {
       this.setState({ selectedNode: node });
     }
 
     if (this.props.multiSelection) {
-      let selectedNodes = handleKeyModifiers(node, e, this.props.selectedNodes, this.state.expandedNodes);
+      let selectedNodes = this.getNodesUsingKeyModifiers(node, e, this.props.selectedNodes, this.state.expandedNodes);
       this.props.onSelectNode(selectedNodes);
     } else {
       this.props.onSelectNode(node, e);
@@ -131,11 +132,11 @@ export class TreeKey extends React.Component {
   }
 
   render() {
-    let style = this.props.styles || defaultTreeStyles;
-    let templates = this.props.templates || {};
+    const style = this.props.styles || defaultTreeStyles;
+    const templates = this.props.templates;
 
-    let selectedNode = this.props.selectedNode || this.state.selectedNode;
-    let selectedNodes = this.props.selectedNodes;
+    const selectedNode = this.props.selectedNode || this.state.selectedNode;
+    const selectedNodes = this.props.selectedNodes;
 
     return (
       <ul
@@ -157,4 +158,14 @@ export class TreeKey extends React.Component {
       </ul>
     );
   }
+}
+
+TreeKey.propTypes = {
+  tree: PropTypes.object,
+  onSelectNode: PropTypes.func,
+  selectedNode: PropTypes.object,
+  selectedNodes: PropTypes.arrayOf(PropTypes.object),
+  expandedNodes: PropTypes.object, // set not available in proptypes
+  templates: PropTypes.objectOf(PropTypes.func),
+  multiSelection: PropTypes.bool,
 }

@@ -24,28 +24,30 @@ class TreeNode extends React.Component {
     }
 
     render() {
-        let { style } = this.props;
+        const { style } = this.props;
 
-        let nodeTextStyles;
+        const isSelectedNode = this.isSelectedNode();
 
-        let isSelectedNode = this.isSelectedNode();
+        let nodeTextStyles = {};
 
-        if(style) {
+        if (style) {
             nodeTextStyles = { ...style.node.default };
 
-            if(isSelectedNode) {
-                nodeTextStyles = { ...style.node.default, ...style.node.selected };
+            if (isSelectedNode) {
+                nodeTextStyles = { ...nodeTextStyles, ...style.node.selected };
             }
         }
+        const isExpanded = this.props.expandedNodes.has(this.props.node);
+        const templates = this.props.templates || {};
 
         return <li onClick={this.onClick}
                className={ `${isSelectedNode ? "treeview-selected-node" : ''}` } >
 
-                <div style={nodeTextStyles || {}}>
+                <div style={nodeTextStyles}>
                     {this.props.node.$children &&
-                        <TreeNodeToggle template={this.props.templates.toggle} setToggling={this.props.setToggling} node={this.props.node} isExpanded={this.props.expandedNodes.has(this.props.node)} />
+                        <TreeNodeToggle template={templates.toggle} setToggling={this.props.setToggling} node={this.props.node} isExpanded={isExpanded} />
                     }
-                    <TreeNodeContent template={this.props.templates.header} node={this.props.node} iconsEnabled={this.props.iconsEnabled} />
+                    <TreeNodeContent template={templates.header} node={this.props.node} iconsEnabled={this.props.iconsEnabled} />
                 </div>
 
                 {this.props.node.$children && this.props.expandedNodes.has(this.props.node) && <ul style={this.props.style.nestedList}> 
@@ -57,7 +59,7 @@ class TreeNode extends React.Component {
                                 selectNewNode={this.props.selectNewNode}
                                 setToggling={this.props.setToggling}
                                 iconsEnabled={this.props.iconsEnabled}
-                                templates={this.props.templates}
+                                templates={templates}
                                 selectedNode={this.props.selectedNode}
                                 selectedNodes={this.props.selectedNodes}
                                 expandedNodes={this.props.expandedNodes}

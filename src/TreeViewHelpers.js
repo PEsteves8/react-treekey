@@ -1,7 +1,6 @@
 function setProp(node, prop, value) {
-    Object.defineProperty(node, prop, { value, writable: true });
+    Object.defineProperty(node, prop, { value });
 }
-
 
 export function setTreeInternalProperties(node) {
     if(node.$children) {
@@ -26,7 +25,7 @@ export function setTreeInternalProperties(node) {
                 setProp(node.$children[i], '$nextNode', node.$children[i+1]);
             }
 
-            setTreeInternalProperties(node.$children[i], false);
+            setTreeInternalProperties(node.$children[i]);
         }
     }
 }

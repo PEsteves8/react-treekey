@@ -13,7 +13,7 @@ export class CustomSelectedTree extends React.Component {
     this.onSelectNode = this.onSelectNode.bind(this);
 
     this.state = {
-      selectedNode: [treeA.$children[0]]
+      selectedNodes: [treeA.$children[0]]
     }
   }
 

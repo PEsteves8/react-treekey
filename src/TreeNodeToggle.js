@@ -1,7 +1,7 @@
 import React from 'react';
 
 import styles from './defaultTreeStyles';
-
+import PropTypes from 'prop-types';
 import { defaultToggle } from './TreeViewDefaultTemplates';
 
 class TreeNodeToggle extends React.Component {
@@ -27,5 +27,12 @@ class TreeNodeToggle extends React.Component {
                 </div>
      }
 }
+
+TreeNodeToggle.propTypes = {
+    template: PropTypes.func,
+    setToggling: PropTypes.func,
+    node: PropTypes.object,
+    isExpanded: PropTypes.bool,
+};
 
 export default TreeNodeToggle;

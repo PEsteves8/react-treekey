@@ -15,7 +15,8 @@ export class BasicTree extends React.Component {
 
     onSelectNode(node) {
         console.log(node);
-     }
+        console.log(treeA);
+    }
 
     render() {
        return  (
