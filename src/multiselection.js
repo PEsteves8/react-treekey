@@ -59,7 +59,7 @@ export function multiselection() {
         result.push(currentNode);
       }
 
-      if (currentNode.$children && expandedNodes.has(currentNode)) {
+      if (currentNode.$children && expandedNodes.includes(currentNode)) {
         currentNode = currentNode.$firstChild;
       } else if (currentNode.$nextNode) {
         currentNode = currentNode.$nextNode;

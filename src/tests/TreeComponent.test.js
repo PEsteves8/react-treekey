@@ -39,7 +39,7 @@ describe("<TreeKey>", () => {
   test("should match snapshot", () => {
     const props = {
       selectedNodes: [treeA],
-      expandedNodes: new Set([treeA]),
+      expandedNodes: [treeA],
       multiSelection: true,
     };
     act(() => {
@@ -59,31 +59,31 @@ describe("<TreeKey>", () => {
           "ArrowUp",
           treeA.$children[3],
           treeA.$children[2].$children[4],
-          new Set([treeA, treeA.$children[2]]),
+          [treeA, treeA.$children[2]],
         ],
         // if previous sibling has children but it's collapsed
-        ["ArrowUp", treeA.$children[3], treeA.$children[2], new Set([treeA])],
+        ["ArrowUp", treeA.$children[3], treeA.$children[2], [treeA]],
 
-        ["ArrowDown", treeA, treeA.$children[0], new Set([treeA])],
-        ["ArrowDown", treeA.$children[0], treeA.$children[1], new Set([treeA])],
+        ["ArrowDown", treeA, treeA.$children[0], [treeA]],
+        ["ArrowDown", treeA.$children[0], treeA.$children[1], [treeA]],
         [
           "ArrowDown",
           treeA.$children[2].$children[4],
           treeA.$children[3],
-          new Set([treeA, treeA.$children[2]]),
+          [treeA, treeA.$children[2]],
         ],
         // if current node has children and is expanded
         [
           "ArrowDown",
           treeA.$children[2],
           treeA.$children[2].$children[0],
-          new Set([treeA, treeA.$children[2]]),
+          [treeA, treeA.$children[2]],
         ],
         // if current node has children but is not expanded
         ["ArrowDown", treeA.$children[2], treeA.$children[3]],
       ])(
         "by pressing key %s, if starting node is %s next node is %s",
-        (key, startNode, endNode, expandedNodes = new Set([treeA])) => {
+        (key, startNode, endNode, expandedNodes = [treeA]) => {
           const props = {
             selectedNodes: [startNode],
             expandedNodes,
@@ -117,7 +117,7 @@ describe("<TreeKey>", () => {
         (key, startNode) => {
           const props = {
             selectedNodes: [startNode],
-            expandedNodes: new Set([treeA]),
+            expandedNodes: [treeA],
             multiSelection: true,
           };
 
@@ -147,7 +147,7 @@ describe("<TreeKey>", () => {
       test("when SHIFT modifier is true, the new node will be added to the previous instead of replacing it", () => {
         const props = {
           selectedNodes: [treeA.$children[0]],
-          expandedNodes: new Set([treeA, treeA.$children[2]]),
+          expandedNodes: [treeA, treeA.$children[2]],
           multiSelection: true,
         };
 
@@ -228,7 +228,7 @@ describe("<TreeKey>", () => {
     test("when there is neither CTRL nor SHIFT modifiers, select the clicked node", () => {
       const props = {
         selectedNodes: [treeA.$children[0]],
-        expandedNodes: new Set([treeA, treeA.$children[2]]),
+        expandedNodes: [treeA, treeA.$children[2]],
         multiSelection: true,
       };
 
@@ -259,7 +259,7 @@ describe("<TreeKey>", () => {
     test("when there is CTRL modifier, is node is selected, remove it; otherwise add it", () => {
       const props = {
         selectedNodes: [treeA.$children[0]],
-        expandedNodes: new Set([treeA, treeA.$children[2]]),
+        expandedNodes: [treeA, treeA.$children[2]],
         multiSelection: true,
       };
 
@@ -302,7 +302,7 @@ describe("<TreeKey>", () => {
     test("when there is SHIFT modifier, using last node clicked before SHIFT pressed as anchor, add or remove nodes accordingly", () => {
       const props = {
         selectedNodes: [treeA.$children[2]],
-        expandedNodes: new Set([treeA, treeA.$children[2]]),
+        expandedNodes: [treeA, treeA.$children[2]],
         multiSelection: true,
       };
 

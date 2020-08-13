@@ -7,7 +7,7 @@ const mockNode = {
   name: "some node",
 };
 
-const expandedNodes = new Set();
+const expandedNodes = [];
 
 let container = null;
 beforeEach(() => {

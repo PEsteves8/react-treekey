@@ -125,7 +125,7 @@ describe("multiselection", () => {
       };
 
       let selectedNodes = [];
-      let expandedNodes = new Set();
+      let expandedNodes = [];
 
       let result;
       let expected;
@@ -147,7 +147,7 @@ describe("multiselection", () => {
       // select first node as root (setting anchor node)
       let event = { };
       let selectedNodes = [];
-      let expandedNodes = new Set();
+      let expandedNodes = [];
       result = getNodesUsingKeyModifiers(
         treeA,
         event,
@@ -160,7 +160,7 @@ describe("multiselection", () => {
       event = {
         shiftKey: true,
       };
-      expandedNodes = new Set([treeA, treeA.$children[2]]);
+      expandedNodes = [treeA, treeA.$children[2]];
       selectedNodes = result;
       result = getNodesUsingKeyModifiers(
         treeA.$children[2].$children[3],

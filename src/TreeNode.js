@@ -37,7 +37,7 @@ class TreeNode extends React.Component {
                 nodeTextStyles = { ...nodeTextStyles, ...style.node.selected };
             }
         }
-        const isExpanded = this.props.expandedNodes.has(this.props.node);
+        const isExpanded = this.props.expandedNodes.includes(this.props.node);
         const templates = this.props.templates || {};
 
         return <li onClick={this.onClick}
@@ -50,7 +50,7 @@ class TreeNode extends React.Component {
                     <TreeNodeContent template={templates.header} node={this.props.node} iconsEnabled={this.props.iconsEnabled} />
                 </div>
 
-                {this.props.node.$children && this.props.expandedNodes.has(this.props.node) && <ul style={this.props.style.nestedList}> 
+                {this.props.node.$children && this.props.expandedNodes.includes(this.props.node) && <ul style={this.props.style.nestedList}> 
                     {this.props.node.$children.map((item, idx) => {
                         return <TreeNode
                                 style={this.props.style}
