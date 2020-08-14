@@ -27,7 +27,11 @@ describe("<TreeNode>", () => {
   test("should match snapshots", () => {
     act(() => {
       render(
-        <TreeNode node={mockNode} expandedNodes={expandedNodes} selectedNodes={[]}></TreeNode>,
+        <TreeNode
+          node={mockNode}
+          expandedNodes={expandedNodes}
+          selectedNodes={[]}
+        ></TreeNode>,
         container
       );
     });
@@ -36,7 +40,11 @@ describe("<TreeNode>", () => {
 
     act(() => {
       render(
-        <TreeNode node={mockNode} expandedNodes={expandedNodes} selectedNodes={[mockNode]}></TreeNode>,
+        <TreeNode
+          node={mockNode}
+          expandedNodes={expandedNodes}
+          selectedNodes={[mockNode]}
+        ></TreeNode>,
         container
       );
     });

@@ -1,16 +1,16 @@
 export let treeA = {
     name: 'root',
-    $children: [{
+    children: [{
         name: 'child1',
     }, {
         name: 'child2'
     }, {
         name: 'child3',
-        $children: [{
+        children: [{
             name: 'grandchild1'
         }, {
             name: 'grandchild2',
-            $children: [{
+            children: [{
                 name: 'greatgrandchild1'
             }, {
                 name: 'greatgrandchild2'
@@ -26,7 +26,7 @@ export let treeA = {
         name: 'child4'
     }, {
         name: 'child5',
-        $children: [{
+        children: [{
             name: 'grandchild1'
         },
         {
@@ -58,11 +58,11 @@ export let treeB = {
     name: 'react-treekey',
     type: 'folder',
     className: 'fas fa-folder',
-    $children: [{
+    children: [{
         name: 'src',
         type: 'folder',
         className: 'fas fa-folder',
-        $children: [{
+        children: [{
             name: 'data.js',
             type: 'js',
             className: 'fab fa-js'

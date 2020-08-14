@@ -12,6 +12,9 @@ export class TreeKey extends React.Component {
   constructor(props) {
     super(props);
 
+    // adds non enumerable properties to each node
+    // to keep track of its relationships for keyboard control
+    // they'll be left out if the user stringifies the tree
     setTreeInternalProperties(props.tree);
 
     this.state = {
@@ -68,7 +71,7 @@ export class TreeKey extends React.Component {
   }
 
   selectNextNode(node, e) {
-    if (node.$children && this.isNodeExpanded(node)) {
+    if (node.children && this.isNodeExpanded(node)) {
       this.selectNewNode(node.$firstChild, e);
     } else if (node.$nextNode) {
       this.selectNewNode(node.$nextNode, e);

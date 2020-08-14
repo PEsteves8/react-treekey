@@ -59,7 +59,7 @@ export function multiselection() {
         result.push(currentNode);
       }
 
-      if (currentNode.$children && expandedNodes.includes(currentNode)) {
+      if (currentNode.children && expandedNodes.includes(currentNode)) {
         currentNode = currentNode.$firstChild;
       } else if (currentNode.$nextNode) {
         currentNode = currentNode.$nextNode;
@@ -92,12 +92,7 @@ export function multiselection() {
     );
   }
 
-  function getNodesUsingKeyModifiers(
-    node,
-    e,
-    selectedNodes,
-    expandedNodes
-  ) {
+  function getNodesUsingKeyModifiers(node, e, selectedNodes, expandedNodes) {
     if (e && e.ctrlKey) {
       if (e.type === "click") {
         const result = !selectedNodes.includes(node)
@@ -145,9 +140,9 @@ export function multiselection() {
       lastSelectedNode = undefined;
       return result;
     }
-  };
+  }
 
   return {
     getNodesUsingKeyModifiers,
-  }
+  };
 }

@@ -1,18 +1,18 @@
 import { multiselection } from "../multiselection";
 import { treeA } from "../../examples/src/data";
-import { setTreeInternalProperties } from '../TreeViewHelpers';
+import { setTreeInternalProperties } from "../TreeViewHelpers";
 
 /*
-* Technically these are implementation details of TreeComponent, but given this module's complexity
-* it's better for it to have its own testing to make debugging easier in case something accidentally breaks.
-*/
+ * Technically these are implementation details of TreeComponent, but given this module's complexity
+ * it's better for it to have its own testing to make debugging easier in case something accidentally breaks.
+ */
 setTreeInternalProperties(treeA);
 let tree;
 let getNodesUsingKeyModifiers = multiselection().getNodesUsingKeyModifiers;
 beforeEach(() => {
-    tree = require("../../examples/src/data").treeA;
-    jest.resetModules();
-  });
+  tree = require("../../examples/src/data").treeA;
+  jest.resetModules();
+});
 describe("multiselection", () => {
   describe("when neither CTRL nor SHIFT keys are being pressed", () => {
     test("returns a list with only the selectedNode, whether or not the node is already present", () => {
@@ -25,29 +25,29 @@ describe("multiselection", () => {
       let expected;
 
       result = getNodesUsingKeyModifiers(
-        tree.$children[0],
+        tree.children[0],
         event,
         selectedNodes,
         expandedNodes
       );
-      expected = [tree.$children[0]];
+      expected = [tree.children[0]];
       expect(result).toEqual(expected);
 
       result = getNodesUsingKeyModifiers(
-        tree.$children[0],
+        tree.children[0],
         event,
         selectedNodes,
         expandedNodes
       );
-      expect(result).toEqual([tree.$children[0]]);
+      expect(result).toEqual([tree.children[0]]);
 
       result = getNodesUsingKeyModifiers(
-        tree.$children[1],
+        tree.children[1],
         event,
         selectedNodes,
         expandedNodes
       );
-      expected = [tree.$children[1]];
+      expected = [tree.children[1]];
       expect(result).toEqual(expected);
     });
   });
@@ -65,17 +65,17 @@ describe("multiselection", () => {
       let result;
       let expected;
       result = getNodesUsingKeyModifiers(
-        tree.$children[0],
+        tree.children[0],
         event,
         selectedNodes,
         expandedNodes
       );
-      expected = [tree.$children[0]];
+      expected = [tree.children[0]];
       expect(result).toEqual(expected);
 
       selectedNodes = result;
       result = getNodesUsingKeyModifiers(
-        tree.$children[0],
+        tree.children[0],
         event,
         selectedNodes,
         expandedNodes
@@ -85,17 +85,17 @@ describe("multiselection", () => {
 
       selectedNodes = result;
       result = getNodesUsingKeyModifiers(
-        tree.$children[1],
+        tree.children[1],
         event,
         selectedNodes,
         expandedNodes
       );
-      expected = [tree.$children[1]];
+      expected = [tree.children[1]];
       expect(result).toEqual(expected);
 
       selectedNodes = result;
       result = getNodesUsingKeyModifiers(
-        tree.$children[0],
+        tree.children[0],
         event,
         selectedNodes,
         expandedNodes
@@ -103,15 +103,15 @@ describe("multiselection", () => {
 
       selectedNodes = result;
       result = getNodesUsingKeyModifiers(
-        tree.$children[2].$children[1],
+        tree.children[2].children[1],
         event,
         selectedNodes,
         expandedNodes
       );
       expected = [
-        tree.$children[1],
-        tree.$children[0],
-        tree.$children[2].$children[1],
+        tree.children[1],
+        tree.children[0],
+        tree.children[2].children[1],
       ];
       expect(result).toEqual(expected);
     });
@@ -119,7 +119,6 @@ describe("multiselection", () => {
 
   describe("when the SHIFT key is being pressed", () => {
     test("if selectedNodes is empty, return empty array", () => {
-     
       let event = {
         shiftKey: true,
       };
@@ -129,9 +128,9 @@ describe("multiselection", () => {
 
       let result;
       let expected;
-      
+
       result = getNodesUsingKeyModifiers(
-        tree.$children[0],
+        tree.children[0],
         event,
         selectedNodes,
         expandedNodes
@@ -145,7 +144,7 @@ describe("multiselection", () => {
       let expected;
 
       // select first node as root (setting anchor node)
-      let event = { };
+      let event = {};
       let selectedNodes = [];
       let expandedNodes = [];
       result = getNodesUsingKeyModifiers(
@@ -160,23 +159,23 @@ describe("multiselection", () => {
       event = {
         shiftKey: true,
       };
-      expandedNodes = [treeA, treeA.$children[2]];
+      expandedNodes = [treeA, treeA.children[2]];
       selectedNodes = result;
       result = getNodesUsingKeyModifiers(
-        treeA.$children[2].$children[3],
+        treeA.children[2].children[3],
         event,
         selectedNodes,
         expandedNodes
       );
       expected = [
         treeA,
-        treeA.$children[0],
-        treeA.$children[1],
-        treeA.$children[2],
-        treeA.$children[2].$children[0],
-        treeA.$children[2].$children[1],
-        treeA.$children[2].$children[2],
-        treeA.$children[2].$children[3],
+        treeA.children[0],
+        treeA.children[1],
+        treeA.children[2],
+        treeA.children[2].children[0],
+        treeA.children[2].children[1],
+        treeA.children[2].children[2],
+        treeA.children[2].children[3],
       ];
       expect(result).toEqual(expected);
 
@@ -184,12 +183,12 @@ describe("multiselection", () => {
       event = {};
       selectedNodes = result;
       result = getNodesUsingKeyModifiers(
-        treeA.$children[2].$children[1],
+        treeA.children[2].children[1],
         event,
         selectedNodes,
         expandedNodes
       );
-      expected = [treeA.$children[2].$children[1]];
+      expected = [treeA.children[2].children[1]];
       expect(result).toEqual(expected);
 
       // select range above including ancestors up to root
@@ -204,12 +203,12 @@ describe("multiselection", () => {
         expandedNodes
       );
       expected = [
-        treeA.$children[2].$children[1],
+        treeA.children[2].children[1],
         treeA,
-        treeA.$children[0],
-        treeA.$children[1],
-        treeA.$children[2],
-        treeA.$children[2].$children[0],
+        treeA.children[0],
+        treeA.children[1],
+        treeA.children[2],
+        treeA.children[2].children[0],
       ];
       expect(result).toEqual(expected);
 
@@ -220,18 +219,18 @@ describe("multiselection", () => {
       };
       selectedNodes = result;
       result = getNodesUsingKeyModifiers(
-        treeA.$children[4],
+        treeA.children[4],
         event,
         selectedNodes,
         expandedNodes
       );
       expected = [
-        treeA.$children[2].$children[1],
-        treeA.$children[2].$children[2],
-        treeA.$children[2].$children[3],
-        treeA.$children[2].$children[4],
-        treeA.$children[3],
-        treeA.$children[4],
+        treeA.children[2].children[1],
+        treeA.children[2].children[2],
+        treeA.children[2].children[3],
+        treeA.children[2].children[4],
+        treeA.children[3],
+        treeA.children[4],
       ];
       expect(result).toEqual(expected);
     });

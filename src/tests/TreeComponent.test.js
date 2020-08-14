@@ -51,36 +51,36 @@ describe("<TreeKey>", () => {
   describe("handleKeyDown", () => {
     describe("when pressing up or down arrow keys", () => {
       test.each([
-        ["ArrowUp", treeA.$children[0], treeA],
-        ["ArrowUp", treeA.$children[1], treeA.$children[0]],
-        ["ArrowUp", treeA.$children[0], treeA],
+        ["ArrowUp", treeA.children[0], treeA],
+        ["ArrowUp", treeA.children[1], treeA.children[0]],
+        ["ArrowUp", treeA.children[0], treeA],
         // if previous sibling has children and is expanded
         [
           "ArrowUp",
-          treeA.$children[3],
-          treeA.$children[2].$children[4],
-          [treeA, treeA.$children[2]],
+          treeA.children[3],
+          treeA.children[2].children[4],
+          [treeA, treeA.children[2]],
         ],
         // if previous sibling has children but it's collapsed
-        ["ArrowUp", treeA.$children[3], treeA.$children[2], [treeA]],
+        ["ArrowUp", treeA.children[3], treeA.children[2], [treeA]],
 
-        ["ArrowDown", treeA, treeA.$children[0], [treeA]],
-        ["ArrowDown", treeA.$children[0], treeA.$children[1], [treeA]],
+        ["ArrowDown", treeA, treeA.children[0], [treeA]],
+        ["ArrowDown", treeA.children[0], treeA.children[1], [treeA]],
         [
           "ArrowDown",
-          treeA.$children[2].$children[4],
-          treeA.$children[3],
-          [treeA, treeA.$children[2]],
+          treeA.children[2].children[4],
+          treeA.children[3],
+          [treeA, treeA.children[2]],
         ],
         // if current node has children and is expanded
         [
           "ArrowDown",
-          treeA.$children[2],
-          treeA.$children[2].$children[0],
-          [treeA, treeA.$children[2]],
+          treeA.children[2],
+          treeA.children[2].children[0],
+          [treeA, treeA.children[2]],
         ],
         // if current node has children but is not expanded
-        ["ArrowDown", treeA.$children[2], treeA.$children[3]],
+        ["ArrowDown", treeA.children[2], treeA.children[3]],
       ])(
         "by pressing key %s, if starting node is %s next node is %s",
         (key, startNode, endNode, expandedNodes = [treeA]) => {
@@ -111,7 +111,7 @@ describe("<TreeKey>", () => {
 
       test.each([
         ["ArrowUp", treeA],
-        ["ArrowDown", treeA.$children[4]],
+        ["ArrowDown", treeA.children[4]],
       ])(
         "if nodes are on the edges, by pressing key %s, if starting node is nothing changes",
         (key, startNode) => {
@@ -146,8 +146,8 @@ describe("<TreeKey>", () => {
 
       test("when SHIFT modifier is true, the new node will be added to the previous instead of replacing it", () => {
         const props = {
-          selectedNodes: [treeA.$children[0]],
-          expandedNodes: [treeA, treeA.$children[2]],
+          selectedNodes: [treeA.children[0]],
+          expandedNodes: [treeA, treeA.children[2]],
           multiSelection: true,
         };
 
@@ -163,7 +163,7 @@ describe("<TreeKey>", () => {
 
         function testKeyPress(key, expectedNames) {
           let treeEl = container.querySelector("ul");
-          
+
           act(() => {
             treeEl.dispatchEvent(
               new KeyboardEvent("keydown", {
@@ -177,7 +177,7 @@ describe("<TreeKey>", () => {
           let selectedElements = document.querySelectorAll(
             ".treeview-selected-node > div > span"
           );
-          
+
           expect(selectedElements.length).toBe(expectedNames.length);
           for (let i = 0; i < selectedElements.length; i++) {
             expect(expectedNames).toContain(selectedElements[i].innerHTML);
@@ -197,7 +197,7 @@ describe("<TreeKey>", () => {
           "child2",
           "child3",
           "grandchild1",
-          "grandchild2"
+          "grandchild2",
         ]);
         testKeyPress("ArrowDown", [
           "child1",
@@ -207,14 +207,26 @@ describe("<TreeKey>", () => {
           "grandchild2",
           "grandchild3", // grandchild 2 is collapsed, so nextnode isn't a child, but a sibling
         ]);
-        testKeyPress("ArrowUp", ["child1", "child2", "child3", "grandchild1", "grandchild2"]);
+        testKeyPress("ArrowUp", [
+          "child1",
+          "child2",
+          "child3",
+          "grandchild1",
+          "grandchild2",
+        ]);
         testKeyPress("ArrowUp", ["child1", "child2", "child3", "grandchild1"]);
 
-        selectedElements = document.querySelectorAll(".treeview-selected-node > div > span");
+        selectedElements = document.querySelectorAll(
+          ".treeview-selected-node > div > span"
+        );
         act(() => {
-          selectedElements[3].dispatchEvent(new MouseEvent("click", { bubbles: true }));
+          selectedElements[3].dispatchEvent(
+            new MouseEvent("click", { bubbles: true })
+          );
         });
-        selectedElements = document.querySelectorAll(".treeview-selected-node > div > span");
+        selectedElements = document.querySelectorAll(
+          ".treeview-selected-node > div > span"
+        );
         expect(selectedElements.length).toBe(1);
         expect(selectedElements[0].innerHTML).toBe("grandchild1");
 
@@ -227,8 +239,8 @@ describe("<TreeKey>", () => {
   describe("mouse click", () => {
     test("when there is neither CTRL nor SHIFT modifiers, select the clicked node", () => {
       const props = {
-        selectedNodes: [treeA.$children[0]],
-        expandedNodes: [treeA, treeA.$children[2]],
+        selectedNodes: [treeA.children[0]],
+        expandedNodes: [treeA, treeA.children[2]],
         multiSelection: true,
       };
 
@@ -237,29 +249,37 @@ describe("<TreeKey>", () => {
       });
 
       act(() => {
-        document.querySelector('ul > li > ul > li:nth-child(3) > ul > li:nth-child(2)').dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        document
+          .querySelector(
+            "ul > li > ul > li:nth-child(3) > ul > li:nth-child(2)"
+          )
+          .dispatchEvent(new MouseEvent("click", { bubbles: true }));
       });
 
       let selectedElements = document.querySelectorAll(
         ".treeview-selected-node > div > span"
       );
       expect(selectedElements.length).toBe(1);
-      expect(selectedElements[0].innerHTML).toBe(treeA.$children[2].$children[1].name);
+      expect(selectedElements[0].innerHTML).toBe(
+        treeA.children[2].children[1].name
+      );
 
       act(() => {
-        document.querySelector('ul > li > ul > li:nth-child(2)').dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        document
+          .querySelector("ul > li > ul > li:nth-child(2)")
+          .dispatchEvent(new MouseEvent("click", { bubbles: true }));
       });
       selectedElements = document.querySelectorAll(
         ".treeview-selected-node > div > span"
       );
       expect(selectedElements.length).toBe(1);
-      expect(selectedElements[0].innerHTML).toBe(treeA.$children[1].name);
+      expect(selectedElements[0].innerHTML).toBe(treeA.children[1].name);
     });
 
     test("when there is CTRL modifier, is node is selected, remove it; otherwise add it", () => {
       const props = {
-        selectedNodes: [treeA.$children[0]],
-        expandedNodes: [treeA, treeA.$children[2]],
+        selectedNodes: [treeA.children[0]],
+        expandedNodes: [treeA, treeA.children[2]],
         multiSelection: true,
       };
 
@@ -268,41 +288,63 @@ describe("<TreeKey>", () => {
       });
 
       act(() => {
-        document.querySelector('ul > li > ul > li:nth-child(3) > ul > li:nth-child(2)').dispatchEvent(new MouseEvent("click", { bubbles: true, ctrlKey: true }));
+        document
+          .querySelector(
+            "ul > li > ul > li:nth-child(3) > ul > li:nth-child(2)"
+          )
+          .dispatchEvent(
+            new MouseEvent("click", { bubbles: true, ctrlKey: true })
+          );
       });
 
       let selectedElements = document.querySelectorAll(
         ".treeview-selected-node > div > span"
       );
       expect(selectedElements.length).toBe(2);
-      expect(selectedElements[0].innerHTML).toBe(treeA.$children[0].name);
-      expect(selectedElements[1].innerHTML).toBe(treeA.$children[2].$children[1].name);
+      expect(selectedElements[0].innerHTML).toBe(treeA.children[0].name);
+      expect(selectedElements[1].innerHTML).toBe(
+        treeA.children[2].children[1].name
+      );
 
       act(() => {
-        document.querySelector('ul > li > ul > li:nth-child(2)').dispatchEvent(new MouseEvent("click", { bubbles: true, ctrlKey: true }));
+        document
+          .querySelector("ul > li > ul > li:nth-child(2)")
+          .dispatchEvent(
+            new MouseEvent("click", { bubbles: true, ctrlKey: true })
+          );
       });
       selectedElements = document.querySelectorAll(
         ".treeview-selected-node > div > span"
       );
       expect(selectedElements.length).toBe(3);
-      expect(selectedElements[0].innerHTML).toBe(treeA.$children[0].name);
-      expect(selectedElements[1].innerHTML).toBe(treeA.$children[1].name);
-      expect(selectedElements[2].innerHTML).toBe(treeA.$children[2].$children[1].name);
+      expect(selectedElements[0].innerHTML).toBe(treeA.children[0].name);
+      expect(selectedElements[1].innerHTML).toBe(treeA.children[1].name);
+      expect(selectedElements[2].innerHTML).toBe(
+        treeA.children[2].children[1].name
+      );
 
       // clicking on currently selected node removes it from list
       act(() => {
-        document.querySelector('ul > li > ul > li:nth-child(3) > ul > li:nth-child(2)').dispatchEvent(new MouseEvent("click", { bubbles: true, ctrlKey: true }));
+        document
+          .querySelector(
+            "ul > li > ul > li:nth-child(3) > ul > li:nth-child(2)"
+          )
+          .dispatchEvent(
+            new MouseEvent("click", { bubbles: true, ctrlKey: true })
+          );
       });
-      selectedElements = document.querySelectorAll(".treeview-selected-node > div > span");
+      selectedElements = document.querySelectorAll(
+        ".treeview-selected-node > div > span"
+      );
       expect(selectedElements.length).toBe(2);
-      expect(selectedElements[0].innerHTML).toBe(treeA.$children[0].name);
-      expect(selectedElements[1].innerHTML).toBe(treeA.$children[1].name);
+      expect(selectedElements[0].innerHTML).toBe(treeA.children[0].name);
+      expect(selectedElements[1].innerHTML).toBe(treeA.children[1].name);
     });
 
     test("when there is SHIFT modifier, using last node clicked before SHIFT pressed as anchor, add or remove nodes accordingly", () => {
       const props = {
-        selectedNodes: [treeA.$children[2]],
-        expandedNodes: [treeA, treeA.$children[2]],
+        selectedNodes: [treeA.children[2]],
+        expandedNodes: [treeA, treeA.children[2]],
         multiSelection: true,
       };
 
@@ -311,50 +353,71 @@ describe("<TreeKey>", () => {
       });
 
       act(() => {
-        document.querySelector('.treeview-root > li > ul > li:nth-child(4)')
-          .dispatchEvent(new MouseEvent("click", { bubbles: true, shiftKey: true }));
+        document
+          .querySelector(".treeview-root > li > ul > li:nth-child(4)")
+          .dispatchEvent(
+            new MouseEvent("click", { bubbles: true, shiftKey: true })
+          );
       });
 
       let selectedElements = document.querySelectorAll(
         ".treeview-selected-node > div > span"
       );
-      let expectedNodes = [treeA.$children[2],
-        treeA.$children[2].$children[0], treeA.$children[2].$children[1], treeA.$children[2].$children[2], treeA.$children[2].$children[3], treeA.$children[2].$children[4], treeA.$children[3]
+      let expectedNodes = [
+        treeA.children[2],
+        treeA.children[2].children[0],
+        treeA.children[2].children[1],
+        treeA.children[2].children[2],
+        treeA.children[2].children[3],
+        treeA.children[2].children[4],
+        treeA.children[3],
       ];
-      let expectedNames = expectedNodes.map(node => node.name);
+      let expectedNames = expectedNodes.map((node) => node.name);
       expect(selectedElements.length).toBe(expectedNames.length);
       for (let i = 0; i < selectedElements.length; i++) {
         expect(expectedNames).toContain(selectedElements[i].innerHTML);
       }
 
-      
       act(() => {
-        document.querySelector('ul > li > ul > li:nth-child(3) > ul > li:nth-child(2)')
-          .dispatchEvent(new MouseEvent("click", { bubbles: true, shiftKey: true }));
+        document
+          .querySelector(
+            "ul > li > ul > li:nth-child(3) > ul > li:nth-child(2)"
+          )
+          .dispatchEvent(
+            new MouseEvent("click", { bubbles: true, shiftKey: true })
+          );
       });
       selectedElements = document.querySelectorAll(
         ".treeview-selected-node > div > span"
       );
-      expectedNodes = [treeA.$children[2],
-        treeA.$children[2].$children[0], treeA.$children[2].$children[1]];
-      expectedNames = expectedNodes.map(node => node.name);
+      expectedNodes = [
+        treeA.children[2],
+        treeA.children[2].children[0],
+        treeA.children[2].children[1],
+      ];
+      expectedNames = expectedNodes.map((node) => node.name);
       expect(selectedElements.length).toBe(expectedNames.length);
       for (let i = 0; i < selectedElements.length; i++) {
         expect(expectedNames).toContain(selectedElements[i].innerHTML);
       }
 
-
-
       act(() => {
-        document.querySelector('ul > li')
-          .dispatchEvent(new MouseEvent("click", { bubbles: true, shiftKey: true }));
+        document
+          .querySelector("ul > li")
+          .dispatchEvent(
+            new MouseEvent("click", { bubbles: true, shiftKey: true })
+          );
       });
       selectedElements = document.querySelectorAll(
         ".treeview-selected-node > div > span"
       );
-      expectedNodes = [treeA.$children[2],
-        treeA.$children[1], treeA.$children[0], treeA];
-      expectedNames = expectedNodes.map(node => node.name);
+      expectedNodes = [
+        treeA.children[2],
+        treeA.children[1],
+        treeA.children[0],
+        treeA,
+      ];
+      expectedNames = expectedNodes.map((node) => node.name);
       expect(selectedElements.length).toBe(expectedNames.length);
       for (let i = 0; i < selectedElements.length; i++) {
         expect(expectedNames).toContain(selectedElements[i].innerHTML);

@@ -23,9 +23,7 @@ afterEach(() => {
 describe("<TreeViewDefaultTemplates>", () => {
   test("should match default snapshot", () => {
     act(() => {
-      render(
-        defaultHeader(mockNode), container
-      );
+      render(defaultHeader(mockNode), container);
     });
 
     expect(container.innerHTML).toMatchSnapshot();
@@ -39,9 +37,9 @@ describe("<TreeViewDefaultTemplates>", () => {
     expect(container.innerHTML).toMatchSnapshot();
 
     act(() => {
-        render(defaultToggle(false), container);
-      });
-  
-      expect(container.innerHTML).toMatchSnapshot();
+      render(defaultToggle(false), container);
+    });
+
+    expect(container.innerHTML).toMatchSnapshot();
   });
 });
