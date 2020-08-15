@@ -4,8 +4,10 @@ import { treeA } from "../../examples/src/data";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 
-const ARROW_UP = "ArrowUp";
-const ARROW_DOWN = "ArrowDown";
+const ARROW_UP = 'ArrowUp';
+const ARROW_DOWN = 'ArrowDown';
+const ARROW_LEFT = 'ArrowLeft';
+const ARROW_RIGHT = 'ArrowRight';
 
 const TreeKeyTestComponent = (props) => {
   const { selectedNodes, ...propsRest } = props;
@@ -30,15 +32,19 @@ let renderTestComponent = (props) => {
   });
 };
 
-let getSelectedElements = () =>
-  document.querySelectorAll(".treeview-selected-node > div > span");
+let getSelectedElements = (spanOnly = true) =>
+  document.querySelectorAll(`.treeview-selected-node ${spanOnly ? '> div > span' : ''}`);
 
 // children position is array of root descendant indices. empty array means it's the root
-let clickNode = (childrenPosition, ctrlKey, shiftKey) => {
-  let selectorParts = childrenPosition.map(
+let getNodeSelectorByPos = nodePos => {
+  let selectorParts = nodePos.map(
     pos => `> ul > li:nth-child(${pos + 1})`
   );
-  let selector = `.treeview-root > li ${selectorParts.join(" ")}`;
+  return `.treeview-root > li ${selectorParts.join(" ")}`;
+};
+
+let clickNode = (nodePos, ctrlKey, shiftKey) => {
+  let selector = getNodeSelectorByPos(nodePos);
   act(() => {
     document
       .querySelector(selector)
@@ -48,7 +54,18 @@ let clickNode = (childrenPosition, ctrlKey, shiftKey) => {
   });
 };
 
-let pressKeyOnTree = (key, shiftKey) => {
+let clickToggle = (nodePos = []) => {
+  let toggleSelector = `${getNodeSelectorByPos(nodePos)} > div > div > svg`;
+  act(() => {
+    document
+      .querySelector(toggleSelector)
+      .dispatchEvent(
+        new MouseEvent("click", { bubbles: true })
+      );
+  });
+};
+
+let pressKeyOnTree = (key, shiftKey = false) => {
   let treeEl = container.querySelector("ul");
   act(() => {
     treeEl.dispatchEvent(
@@ -58,9 +75,9 @@ let pressKeyOnTree = (key, shiftKey) => {
 };
 
 // gets node by children indices. If empty array, returns root
-let getNodeByPos = (childrenPositions = []) => {
+let getNodeByPos = (nodePos = []) => {
   let node = treeA;
-  childrenPositions.forEach(pos => {
+  nodePos.forEach(pos => {
     node = node.children[pos];
   });
   return node;
@@ -91,8 +108,7 @@ describe("<TreeKey>", () => {
     expect(container.innerHTML).toMatchSnapshot();
   });
 
-  describe("handleKeyDown", () => {
-    describe("when pressing up or down arrow keys", () => {
+  describe("node selection with handleKeyDown (arrow up and arrow down keys)", () => {
       test.each([
         [ARROW_UP, [0], []],
         [ARROW_UP, [1], [0]],
@@ -206,10 +222,9 @@ describe("<TreeKey>", () => {
         testKeyPress(ARROW_UP, [[2, 0], [2]]);
         testKeyPress(ARROW_UP, [[2, 0], [2], [1]]);
       });
-    });
   });
 
-  describe("mouse click", () => {
+  describe("node selection with mouse click", () => {
     test("when there is neither CTRL nor SHIFT modifiers, select the clicked node", () => {
       const props = {
         selectedNodes: [getNodeByPos([0])],
@@ -305,6 +320,73 @@ describe("<TreeKey>", () => {
         [0],
         [],
       ]);
+    });
+  });
+
+  describe('expansion toggle', () => {
+    const COLLAPSED_STYLE = 'rotate(0)';
+    const EXPANDED_STYLE = 'rotate(90deg)';
+
+    // get transform style for selectednode or by pos if specified
+    let getNodeToggleStatus = (nodePos) => {
+      let nodeEl = nodePos ? document.querySelector(getNodeSelectorByPos(nodePos)) : getSelectedElements(false)[0];
+      let rotation = nodeEl.querySelector('polygon').style.transform;
+      let hasChildren = !!nodeEl.querySelector('ul');
+      return { rotation, hasChildren };
+    }
+
+    let testNodeRotationStatus = (isExpanded, nodePos) => {
+      let status = getNodeToggleStatus(nodePos);
+      let style = isExpanded ? EXPANDED_STYLE : COLLAPSED_STYLE;
+      expect(status.rotation).toBe(style);
+      expect(status.hasChildren).toBe(isExpanded);
+    };
+
+    test('by pressing left and arrow keys collapse and expand respectively', () => {
+      
+        let startNode = getNodeByPos([2]);
+        const props = {
+          selectedNodes: [startNode],
+          expandedNodes: [treeA],
+          multiSelection: true,
+        };
+        
+        renderTestComponent(props);
+
+        // node of pos [2] is not in expandedNodes, so result is isExpanded is false
+        testNodeRotationStatus(false);
+
+        pressKeyOnTree(ARROW_RIGHT);
+        testNodeRotationStatus(true);
+
+        pressKeyOnTree(ARROW_RIGHT);
+        testNodeRotationStatus(true);
+
+        pressKeyOnTree(ARROW_LEFT);
+        testNodeRotationStatus(false);
+
+        pressKeyOnTree(ARROW_LEFT);
+        testNodeRotationStatus(false);
+    });
+
+    test('by clicking on the toggle it either collapses or expands depending on previous state', () => {
+      let rootChild3Pos = [2];
+      let rootNode = getNodeByPos();
+      let rootChild3 = getNodeByPos(rootChild3Pos);
+      const props = {
+          selectedNodes: [rootNode],
+          expandedNodes: [rootNode, rootChild3],
+          multiSelection: true,
+        };
+
+        renderTestComponent(props);
+        testNodeRotationStatus(true, rootChild3Pos);
+
+        clickToggle(rootChild3Pos);
+        testNodeRotationStatus(false, rootChild3Pos);
+
+        clickToggle(rootChild3Pos);
+        testNodeRotationStatus(true, rootChild3Pos);
     });
   });
 });
