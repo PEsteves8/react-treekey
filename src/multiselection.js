@@ -106,6 +106,8 @@ export function multiselection() {
         lastSelectedNode = undefined;
 
         return result;
+      } else {
+        return [node];
       }
     } else if (e && e.shiftKey) {
       let result = [...selectedNodes];

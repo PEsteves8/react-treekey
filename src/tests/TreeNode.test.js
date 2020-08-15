@@ -61,6 +61,7 @@ describe("<TreeNode>", () => {
           selectNewNode={selectNewNode}
           node={mockNode}
           expandedNodes={expandedNodes}
+          selectedNodes={[]}
         ></TreeNode>,
         container
       );

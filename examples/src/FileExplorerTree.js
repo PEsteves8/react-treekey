@@ -11,7 +11,7 @@ export class FileExplorerTree extends React.Component {
     super(props);
 
     this.state = {
-      selectedNode: null
+      selectedNodes: [],
     };
 
     this.onSelectNode = this.onSelectNode.bind(this);
@@ -29,17 +29,17 @@ export class FileExplorerTree extends React.Component {
   }
 
   onSelectNode(node) {
-    this.setState({ selectedNode: node });
+    this.setState({ selectedNodes: [node] });
   }
 
   render() {
-    const { selectedNode } = this.state;
+    const { selectedNodes } = this.state;
 
     return (
       <div style={styles.treeWrapper}>
         <TreeKey
           tree={treeB}
-          selectedNode={selectedNode}
+          selectedNodes={selectedNodes}
           onSelectNode={this.onSelectNode}
           templates={this.templates}
         />

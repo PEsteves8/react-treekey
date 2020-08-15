@@ -10,12 +10,12 @@ class App extends React.Component {
     render() {
         return (
             <div>
-
+{/* 
                 <div style={{width: '300px', marginTop: '20px'}}>
                     <h5 style={{textAlign: 'center', marginBottom: 0}}>Custom Selected Example</h5>
                     <br />
                     <CustomSelectedTree />
-                </div>
+                </div> */}
 
                 <div style={{width: '300px', marginTop: '20px'}}>
                     <h5 style={{textAlign: 'center', marginBottom: 0}}>Standard Example</h5>
@@ -23,11 +23,11 @@ class App extends React.Component {
                     <BasicTree />
                 </div>
 
-                <div style={{width: '300px', marginTop: '20px'}}>
+                {/* <div style={{width: '300px', marginTop: '20px'}}>
                     <h5 style={{textAlign: 'center', marginBottom: 0}}>File Explorer Example</h5>
                     <br />
                     <FileExplorerTree />
-                </div>
+                </div> */}
             </div>
         );
     }

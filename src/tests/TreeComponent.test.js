@@ -9,18 +9,26 @@ const ARROW_DOWN = 'ArrowDown';
 const ARROW_LEFT = 'ArrowLeft';
 const ARROW_RIGHT = 'ArrowRight';
 
-const TreeKeyTestComponent = (props) => {
-  const { selectedNodes, ...propsRest } = props;
-  const [selectedNodesProp, setSelectNodesProp] = useState(selectedNodes);
-  const onSelectNode = (nodes) => {
-    setSelectNodesProp(nodes);
+let TreeKeyTestComponent = (props) => {
+  let { selectedNodes, expandedNodes = [], ...propsRest } = props;
+  let [selectedNodesProp, setSelectedNodesProp] = useState(selectedNodes);
+  let [expandedNodesProp, setExpandedNodesProp] = useState(expandedNodes);
+
+  let onSelectNode = nodes => {
+    setSelectedNodesProp(nodes);
+  };
+
+  let onExpandNode = nodes => {
+    setExpandedNodesProp(nodes);
   };
 
   return (
     <TreeKey
       tree={treeA}
       onSelectNode={onSelectNode}
+      onExpandNode={onExpandNode}
       selectedNodes={selectedNodesProp}
+      expandedNodes={expandedNodesProp}
       {...propsRest}
     ></TreeKey>
   );

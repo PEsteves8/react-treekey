@@ -11,17 +11,19 @@ import { multiselection } from "./multiselection";
 export class TreeKey extends React.Component {
   constructor(props) {
     super(props);
+    let { selectedNodes, expandedNodes, tree } = props;
 
     // adds non enumerable properties to each node
     // to keep track of its relationships for keyboard control
     // they'll be left out if the user stringifies the tree
-    setTreeInternalProperties(props.tree);
-
+    setTreeInternalProperties(tree);
+    
+    // set root as selected / expanded is it hasn't been specified
     this.state = {
-      tree: props.tree,
-      selectedNode: null,
-      selectedNodes: [],
-      expandedNodes: this.props.expandedNodes || [],
+      tree: tree,
+      lastSelectedNode: (selectedNodes && selectedNodes[0]) || tree,
+      selectedNodes: selectedNodes || [tree],
+      expandedNodes: expandedNodes || [tree],
     };
 
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
@@ -83,10 +85,8 @@ export class TreeKey extends React.Component {
   }
 
   handleOnKeyDown(e) {
-    let node =
-      this.props.selectedNode ||
-      this.state.selectedNode ||
-      this.props.selectedNodes[0];
+    let node = this.state.lastSelectedNode;
+    
     let handlers = {
       ArrowUp: () => this.selectPreviousNode(node, e),
       ArrowDown: () => this.selectNextNode(node, e),
@@ -100,22 +100,25 @@ export class TreeKey extends React.Component {
     }
   }
 
+  shouldAutoSelectNodes() {
+    return !this.props.selectedNodes;
+  }
+
   selectNewNode(node, e) {
-    if (!this.props.selectedNode) {
-      this.setState({ selectedNode: node });
+    let { multiSelection } = this.props;
+    let selectedNodes = multiSelection ? this.getNodesUsingKeyModifiers(
+      node,
+      e,
+      this.state.selectedNodes,
+      this.state.expandedNodes
+    ) : [node];
+
+    if(this.shouldAutoSelectNodes()) {
+      this.setState({ selectedNodes });
     }
 
-    if (this.props.multiSelection) {
-      let selectedNodes = this.getNodesUsingKeyModifiers(
-        node,
-        e,
-        this.props.selectedNodes,
-        this.state.expandedNodes
-      );
-      this.props.onSelectNode(selectedNodes);
-    } else {
-      this.props.onSelectNode(node, e);
-    }
+    this.setState({ lastSelectedNode: node });
+    this.props.onSelectNode(multiSelection ? selectedNodes : selectedNodes[0]);
   }
 
   setToggling(node, shouldBeExpanded = !this.isNodeExpanded(node)) {
@@ -129,35 +132,32 @@ export class TreeKey extends React.Component {
     } else if (!shouldBeExpanded && isExpanded) {
       expandedNodes = expanded.filter((n) => n !== node);
     }
+    
     if (expandedNodes) {
       this.setState({ expandedNodes });
     }
-  }
-
-  componentDidMount() {
-    if (!this.isStartingSelectedNodeSet()) {
-      // Set the root as the selected node
-      this.selectNewNode(this.props.tree);
-    }
-
-    if (this.state.expandedNodes.length === 0) {
-      this.setState({ expandedNodes: [this.props.tree] });
+    
+    if(this.props.onExpandNode) {
+      this.props.onExpandNode(expandedNodes);
     }
   }
 
-  isStartingSelectedNodeSet() {
-    return (
-      this.props.selectedNode ||
-      (this.props.selectedNodes && this.props.selectedNodes.length > 0)
-    );
+  static getDerivedStateFromProps(props, state) {
+    let selectedNodes = props.selectedNodes || state.selectedNodes;
+    let expandedNodes = props.expandedNodes || state.expandedNodes;
+
+    if (selectedNodes !== state.selectedNodes || expandedNodes !== state.expandedNodes) {
+      return { selectedNodes, expandedNodes };
+    }
+
+    return null;
   }
 
   render() {
-    const style = this.props.styles || defaultTreeStyles;
-    const templates = this.props.templates;
+    let style = this.props.styles || defaultTreeStyles;
+    let templates = this.props.templates;
 
-    const selectedNode = this.props.selectedNode || this.state.selectedNode;
-    const selectedNodes = this.props.selectedNodes;
+    let { selectedNodes, expandedNodes, tree } = this.state;
 
     return (
       <ul
@@ -167,14 +167,13 @@ export class TreeKey extends React.Component {
         style={style.root}
       >
         <TreeNode
-          selectedNode={selectedNode}
           selectedNodes={selectedNodes}
           templates={templates}
-          node={this.state.tree}
+          node={tree}
           selectNewNode={this.selectNewNode}
           setToggling={this.setToggling}
           style={style}
-          expandedNodes={this.state.expandedNodes}
+          expandedNodes={expandedNodes}
         />
       </ul>
     );
@@ -184,7 +183,6 @@ export class TreeKey extends React.Component {
 TreeKey.propTypes = {
   tree: PropTypes.object,
   onSelectNode: PropTypes.func,
-  selectedNode: PropTypes.object,
   selectedNodes: PropTypes.arrayOf(PropTypes.object),
   expandedNodes: PropTypes.arrayOf(PropTypes.object),
   templates: PropTypes.objectOf(PropTypes.func),

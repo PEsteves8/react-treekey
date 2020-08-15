@@ -14,19 +14,9 @@ class TreeNode extends React.Component {
     this.props.selectNewNode(this.props.node, e);
   }
 
-  isSelectedNode() {
-    // if multiselection is being used check the array. else check the node itself
-    if (this.props.selectedNodes) {
-      return this.props.selectedNodes.includes(this.props.node);
-    } else if (this.props.selectedNode) {
-      return this.props.selectedNode === this.props.node;
-    }
-  }
-
   render() {
     const { style } = this.props;
-
-    const isSelectedNode = this.isSelectedNode();
+    const isSelectedNode = this.props.selectedNodes.includes(this.props.node);
 
     let nodeTextStyles = {};
 
@@ -61,27 +51,26 @@ class TreeNode extends React.Component {
           />
         </div>
 
-        {this.props.node.children &&
-          this.props.expandedNodes.includes(this.props.node) && (
-            <ul style={this.props.style.nestedList}>
-              {this.props.node.children.map((item, idx) => {
-                return (
-                  <TreeNode
-                    style={this.props.style}
-                    node={item}
-                    key={idx}
-                    selectNewNode={this.props.selectNewNode}
-                    setToggling={this.props.setToggling}
-                    iconsEnabled={this.props.iconsEnabled}
-                    templates={templates}
-                    selectedNode={this.props.selectedNode}
-                    selectedNodes={this.props.selectedNodes}
-                    expandedNodes={this.props.expandedNodes}
-                  />
-                );
-              })}
-            </ul>
-          )}
+        {this.props.node.children && isExpanded && (
+          <ul style={this.props.style.nestedList}>
+            {this.props.node.children.map((item, idx) => {
+              return (
+                <TreeNode
+                  style={this.props.style}
+                  node={item}
+                  key={idx}
+                  selectNewNode={this.props.selectNewNode}
+                  setToggling={this.props.setToggling}
+                  iconsEnabled={this.props.iconsEnabled}
+                  templates={templates}
+                  selectedNode={this.props.selectedNode}
+                  selectedNodes={this.props.selectedNodes}
+                  expandedNodes={this.props.expandedNodes}
+                />
+              );
+            })}
+          </ul>
+        )}
       </li>
     );
   }
