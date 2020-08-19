@@ -3,6 +3,7 @@ export default {
     outline: "none",
     paddingLeft: "20px",
     listStyle: "none",
+    
   },
   node: {
     default: {
@@ -11,7 +12,7 @@ export default {
     },
     selected: {
       backgroundColor: "grey",
-    },
+    }
   },
   nodeToggleWrapper: {
     display: "inline-block",

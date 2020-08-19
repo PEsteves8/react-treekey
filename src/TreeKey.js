@@ -8,6 +8,8 @@ import { setTreeInternalProperties } from "./TreeViewHelpers";
 
 import { multiselection } from "./multiselection";
 
+import { KEYS } from "./constants";
+
 export class TreeKey extends React.Component {
   constructor(props) {
     super(props);
@@ -17,7 +19,7 @@ export class TreeKey extends React.Component {
     // to keep track of its relationships for keyboard control
     // they'll be left out if the user stringifies the tree
     setTreeInternalProperties(tree);
-    
+
     // set root as selected / expanded is it hasn't been specified
     this.state = {
       tree: tree,
@@ -28,8 +30,9 @@ export class TreeKey extends React.Component {
 
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
 
-    this.setToggling = this.setToggling.bind(this);
+    this.setExpandedNodes = this.setExpandedNodes.bind(this);
     this.selectNewNode = this.selectNewNode.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
 
     this.getNodesUsingKeyModifiers = multiselection().getNodesUsingKeyModifiers;
   }
@@ -86,12 +89,12 @@ export class TreeKey extends React.Component {
 
   handleOnKeyDown(e) {
     let node = this.state.lastSelectedNode;
-    
+    const { LEFT, RIGHT, UP, DOWN } = KEYS;
     let handlers = {
-      ArrowUp: () => this.selectPreviousNode(node, e),
-      ArrowDown: () => this.selectNextNode(node, e),
-      ArrowLeft: () => this.setToggling(node, false),
-      ArrowRight: () => this.setToggling(node, true),
+      [UP]: () => this.selectPreviousNode(node, e),
+      [DOWN]: () => this.selectNextNode(node, e),
+      [LEFT]: () => this.handleToggle(node, LEFT),
+      [RIGHT]: () => this.handleToggle(node, RIGHT),
     };
 
     if (handlers[e.key]) {
@@ -100,20 +103,18 @@ export class TreeKey extends React.Component {
     }
   }
 
-  shouldAutoSelectNodes() {
-    return !this.props.selectedNodes;
-  }
-
   selectNewNode(node, e) {
     let { multiSelection } = this.props;
-    let selectedNodes = multiSelection ? this.getNodesUsingKeyModifiers(
-      node,
-      e,
-      this.state.selectedNodes,
-      this.state.expandedNodes
-    ) : [node];
+    let selectedNodes = multiSelection
+      ? this.getNodesUsingKeyModifiers(
+          node,
+          e,
+          this.state.selectedNodes,
+          this.state.expandedNodes
+        )
+      : [node];
 
-    if(this.shouldAutoSelectNodes()) {
+    if (this.shouldAutoSelectNodes()) {
       this.setState({ selectedNodes });
     }
 
@@ -121,32 +122,69 @@ export class TreeKey extends React.Component {
     this.props.onSelectNode(multiSelection ? selectedNodes : selectedNodes[0]);
   }
 
-  setToggling(node, shouldBeExpanded = !this.isNodeExpanded(node)) {
-    // if no value is provided, then simply invert the previous one
-    // the value is provided when using the arrow keys
-    let expanded = this.state.expandedNodes;
+  setExpandedNodes(node, shouldExpand) {
+    let { expandedNodes } = this.state;
+    return shouldExpand ? [...expandedNodes, node] : expandedNodes.filter((n) => n !== node);
+  }
+
+  handleToggle(node, key) {
+    // the explicit value is only provided when using the arrow keys
+    // with click, simply invert the previous value
+    const { LEFT, RIGHT } = KEYS;
     let isExpanded = this.isNodeExpanded(node);
+
     let expandedNodes;
-    if (shouldBeExpanded && !isExpanded) {
-      expandedNodes = [...expanded, node];
-    } else if (!shouldBeExpanded && isExpanded) {
-      expandedNodes = expanded.filter((n) => n !== node);
+
+    if (key === LEFT) {
+      if (
+        !node.$previousNode &&
+        node.$parent &&
+        this.isNodeExpanded(node.$parent) &&
+        !isExpanded
+      ) {
+        this.selectNewNode(node.$parent);
+      } else if (isExpanded) {
+        expandedNodes = this.setExpandedNodes(node, false);
+      }
+    } else if (key === RIGHT) {
+      if (isExpanded) {
+        this.selectNewNode(node.children[0]);
+      } else if (node.children) {
+        expandedNodes = this.setExpandedNodes(node, true);
+      }
+    } else {
+      expandedNodes = this.setExpandedNodes(node, !isExpanded);
     }
-    
+
     if (expandedNodes) {
-      this.setState({ expandedNodes });
-    }
-    
-    if(this.props.onExpandNode) {
-      this.props.onExpandNode(expandedNodes);
+      if (this.shouldAutoExpandNodes()) {
+        this.setState({ expandedNodes });
+      }
+
+      if (this.props.onExpandNode) {
+        this.props.onExpandNode(expandedNodes);
+      }
     }
   }
 
+  shouldAutoSelectNodes() {
+    return !this.props.selectedNodes;
+  }
+
+  shouldAutoExpandNodes() {
+    return !this.props.expandedNodes;
+  }
+
   static getDerivedStateFromProps(props, state) {
+    // if parents isn't sending these values explicitly
+    // the component becomes controlled
     let selectedNodes = props.selectedNodes || state.selectedNodes;
     let expandedNodes = props.expandedNodes || state.expandedNodes;
 
-    if (selectedNodes !== state.selectedNodes || expandedNodes !== state.expandedNodes) {
+    if (
+      selectedNodes !== state.selectedNodes ||
+      expandedNodes !== state.expandedNodes
+    ) {
       return { selectedNodes, expandedNodes };
     }
 
@@ -171,7 +209,7 @@ export class TreeKey extends React.Component {
           templates={templates}
           node={tree}
           selectNewNode={this.selectNewNode}
-          setToggling={this.setToggling}
+          handleToggle={this.handleToggle}
           style={style}
           expandedNodes={expandedNodes}
         />

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TreeKey } from "../TreeComponent";
+import { TreeKey } from "../TreeKey";
 import { treeA } from "../../examples/src/data";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
@@ -58,17 +58,6 @@ let clickNode = (nodePos, ctrlKey, shiftKey) => {
       .querySelector(selector)
       .dispatchEvent(
         new MouseEvent("click", { bubbles: true, shiftKey, ctrlKey })
-      );
-  });
-};
-
-let clickToggle = (nodePos = []) => {
-  let toggleSelector = `${getNodeSelectorByPos(nodePos)} > div > div > svg`;
-  act(() => {
-    document
-      .querySelector(toggleSelector)
-      .dispatchEvent(
-        new MouseEvent("click", { bubbles: true })
       );
   });
 };
@@ -350,7 +339,7 @@ describe("<TreeKey>", () => {
       expect(status.hasChildren).toBe(isExpanded);
     };
 
-    test('by pressing left and arrow keys collapse and expand respectively', () => {
+    test.only('by pressing left and arrow keys collapse and expand respectively is not already so', () => {
       
         let startNode = getNodeByPos([2]);
         const props = {
@@ -358,7 +347,6 @@ describe("<TreeKey>", () => {
           expandedNodes: [treeA],
           multiSelection: true,
         };
-        
         renderTestComponent(props);
 
         // node of pos [2] is not in expandedNodes, so result is isExpanded is false
@@ -367,15 +355,39 @@ describe("<TreeKey>", () => {
         pressKeyOnTree(ARROW_RIGHT);
         testNodeRotationStatus(true);
 
+        pressKeyOnTree(ARROW_LEFT);
+        testNodeRotationStatus(false);
+
         pressKeyOnTree(ARROW_RIGHT);
         testNodeRotationStatus(true);
-
-        pressKeyOnTree(ARROW_LEFT);
-        testNodeRotationStatus(false);
-
-        pressKeyOnTree(ARROW_LEFT);
-        testNodeRotationStatus(false);
     });
+
+    test.only('by pressing left and arrow keys jump to child/parent if already expanded/collapsed', () => {
+      
+      let startNode = getNodeByPos([2]);
+      const props = {
+        selectedNodes: [startNode],
+        expandedNodes: [treeA],
+        multiSelection: true,
+      };
+      let selectedElements;
+      renderTestComponent(props);
+
+      selectedElements = getSelectedElements();
+      expect(selectedElements.length).toBe(1);
+      expect(selectedElements[0].innerHTML).toBe(getNodeByPos([2]).name)
+
+      pressKeyOnTree(ARROW_RIGHT); // first to expand
+      pressKeyOnTree(ARROW_RIGHT);
+      selectedElements = getSelectedElements();
+      expect(selectedElements.length).toBe(1);
+      expect(selectedElements[0].innerHTML).toBe(getNodeByPos([2, 0]).name)
+
+      pressKeyOnTree(ARROW_LEFT);
+      selectedElements = getSelectedElements();
+      expect(selectedElements.length).toBe(1);
+      expect(selectedElements[0].innerHTML).toBe(getNodeByPos([2]).name)
+  });
 
     test('by clicking on the toggle it either collapses or expands depending on previous state', () => {
       let rootChild3Pos = [2];
@@ -390,10 +402,10 @@ describe("<TreeKey>", () => {
         renderTestComponent(props);
         testNodeRotationStatus(true, rootChild3Pos);
 
-        clickToggle(rootChild3Pos);
+        clickNode(rootChild3Pos);
         testNodeRotationStatus(false, rootChild3Pos);
 
-        clickToggle(rootChild3Pos);
+        clickNode(rootChild3Pos);
         testNodeRotationStatus(true, rootChild3Pos);
     });
   });

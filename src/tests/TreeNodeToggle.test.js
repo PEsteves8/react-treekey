@@ -64,27 +64,4 @@ describe("<TreeNodeToggle>", () => {
     expect(spy).toHaveBeenCalledWith(isExpanded);
     spy.mockRestore();
   });
-
-  test("calls props.setToggling when clicked", () => {
-    const setToggling = jest.fn();
-
-    act(() => {
-      render(
-        <TreeNodeToggle
-          node={mockNode}
-          setToggling={setToggling}
-          expandedNodes={expandedNodes}
-        ></TreeNodeToggle>,
-        container
-      );
-    });
-
-    const el = container.querySelector("div");
-
-    act(() => {
-      el.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-    });
-
-    expect(setToggling).toHaveBeenCalledTimes(1);
-  });
 });

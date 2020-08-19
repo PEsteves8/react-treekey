@@ -31,6 +31,7 @@ describe("<TreeNode>", () => {
           node={mockNode}
           expandedNodes={expandedNodes}
           selectedNodes={[]}
+          handleToggle={jest.fn()}
         ></TreeNode>,
         container
       );
@@ -44,6 +45,7 @@ describe("<TreeNode>", () => {
           node={mockNode}
           expandedNodes={expandedNodes}
           selectedNodes={[mockNode]}
+          handleToggle={jest.fn()}
         ></TreeNode>,
         container
       );
@@ -62,6 +64,7 @@ describe("<TreeNode>", () => {
           node={mockNode}
           expandedNodes={expandedNodes}
           selectedNodes={[]}
+          handleToggle={jest.fn()}
         ></TreeNode>,
         container
       );

@@ -145,6 +145,6 @@ export function multiselection() {
   }
 
   return {
-    getNodesUsingKeyModifiers,
+    getNodesUsingKeyModifiers
   };
 }
