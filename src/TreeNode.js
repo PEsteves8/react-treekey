@@ -11,9 +11,8 @@ class TreeNode extends React.Component {
   }
 
   onClick(e) {
-    e.stopPropagation();
-   
     this.props.selectNewNode(this.props.node, e);
+
     if (!e.shiftKey && !e.ctrlKey) {
       this.props.handleToggle(this.props.node);
     }
@@ -24,7 +23,7 @@ class TreeNode extends React.Component {
       // Prevent text selection
       event.preventDefault();
     }
-  };
+  }
 
   render() {
     const { style } = this.props;
@@ -43,12 +42,12 @@ class TreeNode extends React.Component {
     const templates = this.props.templates || {};
 
     return (
-      <li
-        onClick={this.onClick}
-        onMouseDown={this.onMouseDown}
-        className={`${isSelectedNode ? "treeview-selected-node" : ""}`}
-      >
-        <div style={nodeTextStyles}>
+      <li className={`${isSelectedNode ? "treeview-selected-node" : ""}`}>
+        <div
+          style={nodeTextStyles}
+          onClick={this.onClick}
+          onMouseDown={this.onMouseDown}
+        >
           {this.props.node.children && (
             <TreeNodeToggle
               template={templates.toggle}

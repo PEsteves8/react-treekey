@@ -146,11 +146,11 @@ export class TreeKey extends React.Component {
       } else if (isExpanded) {
         expandedNodes = this.setExpandedNodes(node, false);
       }
-    } else if (key === RIGHT) {
-      if (isExpanded) {
-        this.selectNewNode(node.children[0]);
-      } else if (node.children) {
+    } else if (key === RIGHT && node.children) {
+      if (!isExpanded) {
         expandedNodes = this.setExpandedNodes(node, true);
+      } else {
+        this.selectNewNode(node.children[0]);
       }
     } else {
       expandedNodes = this.setExpandedNodes(node, !isExpanded);

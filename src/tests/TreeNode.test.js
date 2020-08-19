@@ -70,7 +70,7 @@ describe("<TreeNode>", () => {
       );
     });
 
-    const el = container.querySelector("li");
+    const el = container.querySelector("li > div");
     act(() => {
       el.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });

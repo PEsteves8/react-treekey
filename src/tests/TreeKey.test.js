@@ -48,7 +48,7 @@ let getNodeSelectorByPos = nodePos => {
   let selectorParts = nodePos.map(
     pos => `> ul > li:nth-child(${pos + 1})`
   );
-  return `.treeview-root > li ${selectorParts.join(" ")}`;
+  return `.treeview-root > li ${selectorParts.join(" ")} > div`;
 };
 
 let clickNode = (nodePos, ctrlKey, shiftKey) => {
@@ -328,18 +328,18 @@ describe("<TreeKey>", () => {
     let getNodeToggleStatus = (nodePos) => {
       let nodeEl = nodePos ? document.querySelector(getNodeSelectorByPos(nodePos)) : getSelectedElements(false)[0];
       let rotation = nodeEl.querySelector('polygon').style.transform;
-      let hasChildren = !!nodeEl.querySelector('ul');
+      let hasChildren = !!nodeEl.parentNode.querySelector('ul');
       return { rotation, hasChildren };
     }
 
-    let testNodeRotationStatus = (isExpanded, nodePos) => {
+    let testNodeExpansionStatus = (isExpanded, nodePos) => {
       let status = getNodeToggleStatus(nodePos);
       let style = isExpanded ? EXPANDED_STYLE : COLLAPSED_STYLE;
       expect(status.rotation).toBe(style);
       expect(status.hasChildren).toBe(isExpanded);
     };
 
-    test.only('by pressing left and arrow keys collapse and expand respectively is not already so', () => {
+    test('by pressing left and arrow keys collapse and expand respectively is not already so', () => {
       
         let startNode = getNodeByPos([2]);
         const props = {
@@ -350,19 +350,19 @@ describe("<TreeKey>", () => {
         renderTestComponent(props);
 
         // node of pos [2] is not in expandedNodes, so result is isExpanded is false
-        testNodeRotationStatus(false);
+        testNodeExpansionStatus(false);
 
         pressKeyOnTree(ARROW_RIGHT);
-        testNodeRotationStatus(true);
+        testNodeExpansionStatus(true);
 
         pressKeyOnTree(ARROW_LEFT);
-        testNodeRotationStatus(false);
+        testNodeExpansionStatus(false);
 
         pressKeyOnTree(ARROW_RIGHT);
-        testNodeRotationStatus(true);
+        testNodeExpansionStatus(true);
     });
 
-    test.only('by pressing left and arrow keys jump to child/parent if already expanded/collapsed', () => {
+    test('by pressing left and arrow keys jump to child/parent if already expanded/collapsed', () => {
       
       let startNode = getNodeByPos([2]);
       const props = {
@@ -389,7 +389,7 @@ describe("<TreeKey>", () => {
       expect(selectedElements[0].innerHTML).toBe(getNodeByPos([2]).name)
   });
 
-    test('by clicking on the toggle it either collapses or expands depending on previous state', () => {
+    test('by clicking on a toggleable node it either collapses or expands depending on previous state', () => {
       let rootChild3Pos = [2];
       let rootNode = getNodeByPos();
       let rootChild3 = getNodeByPos(rootChild3Pos);
@@ -400,13 +400,13 @@ describe("<TreeKey>", () => {
         };
 
         renderTestComponent(props);
-        testNodeRotationStatus(true, rootChild3Pos);
+        testNodeExpansionStatus(true, rootChild3Pos);
 
         clickNode(rootChild3Pos);
-        testNodeRotationStatus(false, rootChild3Pos);
+        testNodeExpansionStatus(false, rootChild3Pos);
 
         clickNode(rootChild3Pos);
-        testNodeRotationStatus(true, rootChild3Pos);
+        testNodeExpansionStatus(true, rootChild3Pos);
     });
   });
 });
