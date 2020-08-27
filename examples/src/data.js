@@ -79,8 +79,5 @@ export let treeB = {
             type: 'js',
             className: 'fab fa-js'
         }]
-    }, {
-        name: 'child2',
-        type: 'other'
     }]
 }

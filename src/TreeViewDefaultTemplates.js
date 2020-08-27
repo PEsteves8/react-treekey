@@ -17,5 +17,5 @@ export let defaultToggle = isExpanded => {
     }
 
 export let defaultHeader = node => {
-    return <span>{node.name}</span>
+    return <span style={{paddingLeft: '7px'}}>{node.name}</span>
 }

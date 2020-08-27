@@ -22,7 +22,7 @@ export class TreeKey extends React.Component {
 
     // set root as selected / expanded is it hasn't been specified
     this.state = {
-      tree: tree,
+      tree,
       lastSelectedNode: (selectedNodes && selectedNodes[0]) || tree,
       selectedNodes: selectedNodes || [tree],
       expandedNodes: expandedNodes || [tree],
@@ -30,7 +30,7 @@ export class TreeKey extends React.Component {
 
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
 
-    this.setExpandedNodes = this.setExpandedNodes.bind(this);
+    this.updateExpandedNodes = this.updateExpandedNodes.bind(this);
     this.selectNewNode = this.selectNewNode.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
 
@@ -39,8 +39,12 @@ export class TreeKey extends React.Component {
 
   findFirstParentsNextNode(node) {
     if (!node.$parent) return;
-    if (node.$parent && node.$parent.$nextNode) return node.$parent.$nextNode;
-    else return this.findFirstParentsNextNode(node.$parent);
+    
+    if (node.$parent && node.$parent.$nextNode) {
+      return node.$parent.$nextNode;
+    } 
+
+    return this.findFirstParentsNextNode(node.$parent);
   }
 
   findLastCollapsedChild(node) {
@@ -122,9 +126,10 @@ export class TreeKey extends React.Component {
     this.props.onSelectNode(multiSelection ? selectedNodes : selectedNodes[0]);
   }
 
-  setExpandedNodes(node, shouldExpand) {
+  updateExpandedNodes(node, shouldExpand) {
     let { expandedNodes } = this.state;
-    return shouldExpand ? [...expandedNodes, node] : expandedNodes.filter((n) => n !== node);
+    let result = shouldExpand ? [...expandedNodes, node] : expandedNodes.filter((n) => n !== node);
+    return result;
   }
 
   handleToggle(node, key) {
@@ -144,16 +149,16 @@ export class TreeKey extends React.Component {
       ) {
         this.selectNewNode(node.$parent);
       } else if (isExpanded) {
-        expandedNodes = this.setExpandedNodes(node, false);
+        expandedNodes = this.updateExpandedNodes(node, false);
       }
     } else if (key === RIGHT && node.children) {
       if (!isExpanded) {
-        expandedNodes = this.setExpandedNodes(node, true);
+        expandedNodes = this.updateExpandedNodes(node, true);
       } else {
         this.selectNewNode(node.children[0]);
       }
-    } else {
-      expandedNodes = this.setExpandedNodes(node, !isExpanded);
+    } else if (node.children) { // if click event
+      expandedNodes = this.updateExpandedNodes(node, !isExpanded);
     }
 
     if (expandedNodes) {
@@ -180,15 +185,7 @@ export class TreeKey extends React.Component {
     // the component becomes controlled
     let selectedNodes = props.selectedNodes || state.selectedNodes;
     let expandedNodes = props.expandedNodes || state.expandedNodes;
-
-    if (
-      selectedNodes !== state.selectedNodes ||
-      expandedNodes !== state.expandedNodes
-    ) {
-      return { selectedNodes, expandedNodes };
-    }
-
-    return null;
+    return { selectedNodes, expandedNodes };
   }
 
   render() {
@@ -212,6 +209,7 @@ export class TreeKey extends React.Component {
           handleToggle={this.handleToggle}
           style={style}
           expandedNodes={expandedNodes}
+          indentValue={1}
         />
       </ul>
     );
@@ -221,6 +219,7 @@ export class TreeKey extends React.Component {
 TreeKey.propTypes = {
   tree: PropTypes.object,
   onSelectNode: PropTypes.func,
+  onExpandNode: PropTypes.func,
   selectedNodes: PropTypes.arrayOf(PropTypes.object),
   expandedNodes: PropTypes.arrayOf(PropTypes.object),
   templates: PropTypes.objectOf(PropTypes.func),

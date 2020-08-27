@@ -2,8 +2,6 @@ import React from "react";
 
 import { treeB } from "./data";
 
-import styles from "./styles";
-
 import { TreeKey } from "../../src";
 
 export class FileExplorerTree extends React.Component {
@@ -36,7 +34,7 @@ export class FileExplorerTree extends React.Component {
     const { selectedNodes } = this.state;
 
     return (
-      <div style={styles.treeWrapper}>
+      <div>
         <TreeKey
           tree={treeB}
           selectedNodes={selectedNodes}

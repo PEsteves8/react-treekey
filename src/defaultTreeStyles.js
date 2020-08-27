@@ -1,22 +1,19 @@
 export default {
   root: {
     outline: "none",
-    paddingLeft: "20px",
+    paddingLeft: "18px",
     listStyle: "none",
     
   },
   node: {
-    default: {
-      paddingLeft: "100%",
-      marginLeft: "-100%",
-    },
+    default: {  },
     selected: {
       backgroundColor: "grey",
     }
   },
   nodeToggleWrapper: {
     display: "inline-block",
-    padding: "0 5px",
+    paddingLeft: "25px",
     marginLeft: "-18px",
   },
   nodeToggleSvg: {
@@ -26,6 +23,7 @@ export default {
   },
   nestedList: {
     listStyle: "none",
-    paddingLeft: "8px",
+    //paddingLeft: "8px",
+    paddingLeft: "0px",
   },
 };
