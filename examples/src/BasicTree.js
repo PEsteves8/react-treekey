@@ -19,7 +19,7 @@ export class BasicTree extends React.Component {
     super(props);
     this.state = {
       // if selectedNodes prop isn't used, the selected will be the root by default
-      selectedNodeName: treeA.name,
+      selectedNode: treeA,
     };
 
     this.onSelectNode = this.onSelectNode.bind(this);
@@ -27,14 +27,14 @@ export class BasicTree extends React.Component {
 
   onSelectNode(node) {
     console.log(node);
-    this.setState({ selectedNodeName: node.name });
+    this.setState({ selectedNode: node });
   }
 
   render() {
     return (
-      <div className="row mt-3 mb-3">
-      <div className='col-5'>
-        <h6>
+      <div className="row mt-3 mb-3" style={{height: '500px'}}>
+        <div className="col-5">
+          <h6>
             No Config - Default Templates, Single Selection&nbsp;
             <Link
               href={
@@ -42,9 +42,15 @@ export class BasicTree extends React.Component {
               }
             />
           </h6>
-        <div style={{ marginBottom: '10px'  }}>Selected Node: {this.state.selectedNodeName}</div>
-        <TreeKey tree={treeA} onSelectNode={this.onSelectNode} />
-      </div>
+          <div style={{ height: "500px", overflowY: "auto" }}>
+            <TreeKey tree={treeA} onSelectNode={this.onSelectNode} />
+          </div>
+        </div>
+        <div className="col-7">
+          <pre style={{ color: "white" }}>
+            {JSON.stringify(this.state.selectedNode, undefined, 2)}
+          </pre>
+        </div>
       </div>
     );
   }
