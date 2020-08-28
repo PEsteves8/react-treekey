@@ -27,6 +27,7 @@ export class CustomTree extends React.Component {
       expandedNodes: [rootNode, srcFolder, nodeFolder],
       tree: treeB,
       key: 0,
+      lastNodeId: 23,
     };
 
     this.onSelectNode = this.onSelectNode.bind(this);
@@ -56,9 +57,9 @@ export class CustomTree extends React.Component {
 
   addNode(name, type) {
     event.preventDefault();
-    console.log(this.state.selectedNodes);
     let node = this.state.selectedNodes[0];
-    let newNode = { name, type };
+    let newNodeId = this.state.lastNodeId + 1
+    let newNode = { name, type, id: newNodeId };
     
     let classNames = {
       folder: 'fas fa-folder',
@@ -95,26 +96,21 @@ export class CustomTree extends React.Component {
     
     let resetTree = JSON.parse(JSON.stringify(this.state.tree));
 
-    let stringifiedSelected = this.state.selectedNodes.map((node) =>
-      JSON.stringify(node)
-    );
-    let stringifiedExpanded = this.state.expandedNodes.map((node) =>
-      JSON.stringify(node)
-    );
+    let selectedIds = this.state.selectedNodes.map((node) => node.id);
+    let expandedIds = this.state.expandedNodes.map((node) => node.id);
     let newSelected = [];
     let newExpanded = [];
 
     let resetLists = (node) => {
-      let stringNode = JSON.stringify(node);
       if (
-        stringifiedSelected.includes(stringNode) &&
-        !newSelected.includes(stringNode)
+        selectedIds.includes(node.id) &&
+        !newSelected.includes(node.id)
       ) {
         newSelected.push(node);
       }
       if (
-        stringifiedExpanded.includes(stringNode) &&
-        !newExpanded.includes(stringNode)
+        expandedIds.includes(node.id) &&
+        !newExpanded.includes(node.id)
       ) {
         newExpanded.push(node);
       }
@@ -134,6 +130,7 @@ export class CustomTree extends React.Component {
       // the key forces the component to restart
       // so that the nodes metadata can be rebuilt with the new tree state
       key: this.state.key + 1,
+      lastNodeId: newNodeId
     });
   }
 
@@ -184,7 +181,7 @@ export class CustomTree extends React.Component {
       expandedNodes: newExpanded,
       // the key forces the component to restart
       // so that the nodes metadata can be rebuilt with the new tree state
-      key: this.state.key + 1,
+      key: this.state.key + 1
     });
   }
 

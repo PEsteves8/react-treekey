@@ -5,11 +5,11 @@ import PropTypes from "prop-types";
 import { defaultToggle } from "./TreeViewDefaultTemplates";
 
 function TreeNodeToggle(props) {
-  let { template, isExpanded } = props;
+  let { template, isExpanded, node } = props;
 
   return (
     <div style={styles.nodeToggleWrapper}>
-      {template ? template(isExpanded) : defaultToggle(isExpanded)}
+      {template ? template(isExpanded, node) : defaultToggle(isExpanded)}
     </div>
   );
 }
