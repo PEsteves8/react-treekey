@@ -33,7 +33,7 @@ export class BasicTree extends React.Component {
   render() {
     return (
       <div className="row mt-3 mb-3" style={{height: '500px'}}>
-        <div className="col-5">
+        <div className="col-6">
           <h6>
             No Config - Default Templates, Single Selection&nbsp;
             <Link
@@ -46,7 +46,7 @@ export class BasicTree extends React.Component {
             <TreeKey tree={treeA} onSelectNode={this.onSelectNode} />
           </div>
         </div>
-        <div className="col-7">
+        <div className="col-6">
           <pre style={{ color: "white" }}>
             {JSON.stringify(this.state.selectedNode, undefined, 2)}
           </pre>

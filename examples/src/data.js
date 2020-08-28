@@ -102,7 +102,7 @@ export let treeB = {
         {
           name: ".gitignore",
           type: "none",
-          className: "fab fa-git-alt text-info",
+          className: "fab fa-git-alt text-warning",
         },
         {
           name: "data.js",
@@ -181,6 +181,21 @@ export let treeB = {
           ],
         },
       ],
+    },
+    {
+      name: ".gitignore",
+      type: "none",
+      className: "fab fa-git-alt text-warning",
+    },
+    {
+      name: "LICENSE",
+      type: "NONE",
+      className: "fas fa-file",
+    },
+    {
+      name: "README.md",
+      type: "md",
+      className: "far fa-info-circle text-info",
     },
   ],
 };
