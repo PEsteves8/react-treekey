@@ -107,7 +107,7 @@ export let treeB = {
         {
           name: ".gitignore",
           id: 6,
-          type: "none",
+          type: "file",
           className: "fab fa-git-alt text-warning",
         },
         {
@@ -163,7 +163,7 @@ export let treeB = {
             {
               name: "LICENSE",
               id: 15,
-              type: "NONE",
+              type: "file",
               className: "fas fa-file",
             },
             {
@@ -189,7 +189,7 @@ export let treeB = {
             {
               name: "LICENSE",
               id: 19,
-              type: "NONE",
+              type: "file",
               className: "fas fa-file",
             },
             {
@@ -205,13 +205,13 @@ export let treeB = {
     {
       name: ".gitignore",
       id: 21,
-      type: "none",
+      type: "file",
       className: "fab fa-git-alt text-warning",
     },
     {
       name: "LICENSE",
       id: 22,
-      type: "NONE",
+      type: "file",
       className: "fas fa-file",
     },
     {

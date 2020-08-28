@@ -1,27 +1,19 @@
 import React from "react";
 import { treeB } from "./data";
 import { TreeKey } from "../../src";
-import AddNode from './AddNode';
-
-function Link({ href }) {
-  return (
-    <a
-      target={"_blank"}
-      href={href}
-      className={"btn btn-sm btn-outline-secondary ml-2"}
-    >
-      <i className={"fas fa-code"} />
-    </a>
-  );
-}
+import AddNode from "./AddNode";
+import Link from "./Link";
+import { recoverNodeListsUsingIds } from './treeResetHelpers';
 
 export class CustomTree extends React.Component {
   constructor(props) {
     super(props);
+
     let rootNode = treeB;
     let srcFolder = rootNode.children[0];
     let indexFile = srcFolder.children[4];
     let nodeFolder = rootNode.children[1];
+
     this.state = {
       selectedNodes: [indexFile],
       expandedNodes: [rootNode, srcFolder, nodeFolder],
@@ -55,133 +47,87 @@ export class CustomTree extends React.Component {
     this.setState({ expandedNodes });
   }
 
+   /*
+  * CRUD operations aren't natively supported by the component
+  * This is one somewhat hacky way (not particularly efficient) of attaining the same effect
+  * First filter/push/edit the nodes from the parent's children prop
+  * Then reset the tree references by stringifying and parsing it back
+  * Since, the references were lost, we run an helper to recover the new ones using the nodes' unique ids
+  * Increase the key property in setState, restarting the treekey component so it remaps the node relationships with this new tree
+  * If adding, increment the last node id, so we make sure every new added node is associated with a unique id
+  */
   addNode(name, type) {
     event.preventDefault();
-    let node = this.state.selectedNodes[0];
-    let newNodeId = this.state.lastNodeId + 1
+    let selectedNode = this.state.selectedNodes[0];
+    let newNodeId = this.state.lastNodeId + 1;
     let newNode = { name, type, id: newNodeId };
-    
+
+    let fileExt = newNode.name.match(/\.[^.]*/)[0].slice(1);
+
     let classNames = {
-      folder: 'fas fa-folder',
-      js: 'fab fa-js text-warning',
-      html: 'fab fa-html5 text-danger',
-      test: 'fas fa-flask text-warning',
-      md: 'far fa-info-circle text-info',
-      git: 'fab fa-git-alt text-warning',
-      other: 'fas fa-file'
-    }
-
-    if (type === 'folder') {
-      newNode.children = [];
-      newNode.className = classNames.folder;
-    } else if (name.includes('.test.')) {
-      newNode.className = classNames.test;
-    } else if (name.endsWith('.js')) {
-      newNode.className = classNames.js;
-    } else if  (name.endsWith('.html')) {
-      newNode.className = classNames.html;
-    } else if (name.endsWith('.md')) {
-      newNode.className = classNames.md;
-    } else if (name.includes('.git')) {
-      newNode.className = classNames.git
-    }else {
-      newNode.className = classNames.other;
-    }
-    
-    if (node.children) {
-      node.children.push(newNode);
-    } else {
-      node.$parent.children.push(newNode);
-    }
-    
-    let resetTree = JSON.parse(JSON.stringify(this.state.tree));
-
-    let selectedIds = this.state.selectedNodes.map((node) => node.id);
-    let expandedIds = this.state.expandedNodes.map((node) => node.id);
-    let newSelected = [];
-    let newExpanded = [];
-
-    let resetLists = (node) => {
-      if (
-        selectedIds.includes(node.id) &&
-        !newSelected.includes(node.id)
-      ) {
-        newSelected.push(node);
-      }
-      if (
-        expandedIds.includes(node.id) &&
-        !newExpanded.includes(node.id)
-      ) {
-        newExpanded.push(node);
-      }
-      if (node.children) {
-        node.children.forEach((child) => {
-          resetLists(child);
-        });
-      }
+      js: "fab fa-js text-warning",
+      html: "fab fa-html5 text-danger",
+      test: "fas fa-flask text-warning",
+      md: "far fa-info-circle text-info",
+      folder: "fas fa-folder",
+      git: "fab fa-git-alt text-warning",
+      other: "fas fa-file",
     };
 
-    resetLists(resetTree);
+    if (type === "folder") {
+      newNode.children = [];
+      newNode.className = classNames.folder;
+    } else if (newNode.name.startsWith('.git')) {
+      newNode.className = classNames.git;
+    } else {
+      newNode.className = classNames[fileExt] || classNames.other;
+    }
+
+    if (selectedNode.children) {
+      selectedNode.children.push(newNode);
+    } else {
+      selectedNode.$parent.children.push(newNode);
+    }
+
+    let resetTree = JSON.parse(JSON.stringify(this.state.tree));
+
+    let [selectedNodes, expandedNodes] = recoverNodeListsUsingIds(
+      resetTree,
+      this.state.selectedNodes,
+      this.state.expandedNodes
+    );
 
     this.setState({
       tree: resetTree,
-      selectedNodes: newSelected,
-      expandedNodes: newExpanded,
-      // the key forces the component to restart
-      // so that the nodes metadata can be rebuilt with the new tree state
+      selectedNodes,
+      expandedNodes,
       key: this.state.key + 1,
-      lastNodeId: newNodeId
+      lastNodeId: newNodeId,
     });
   }
-
+ 
   deleteSelectedNodes() {
     this.state.selectedNodes.forEach((node) => {
+      if (node.$parent) {
       node.$parent.children = node.$parent.children.filter(
         (child) => child !== node
       );
+    }
     });
 
     let resetTree = JSON.parse(JSON.stringify(this.state.tree));
 
-    let stringifiedSelected = this.state.selectedNodes.map((node) =>
-      JSON.stringify(node)
+    let [selectedNodes, expandedNodes] = recoverNodeListsUsingIds(
+      resetTree,
+      this.state.selectedNodes,
+      this.state.expandedNodes
     );
-    let stringifiedExpanded = this.state.expandedNodes.map((node) =>
-      JSON.stringify(node)
-    );
-    let newSelected = [];
-    let newExpanded = [];
-
-    let resetLists = (node) => {
-      let stringNode = JSON.stringify(node);
-      if (
-        stringifiedSelected.includes(stringNode) &&
-        !newSelected.includes(stringNode)
-      ) {
-        newSelected.push(node);
-      }
-      if (
-        stringifiedExpanded.includes(stringNode) &&
-        !newExpanded.includes(stringNode)
-      ) {
-        newExpanded.push(node);
-      }
-      if (node.children) {
-        node.children.forEach((child) => {
-          resetLists(child);
-        });
-      }
-    };
-
-    resetLists(resetTree);
 
     this.setState({
       tree: resetTree,
       selectedNodes: [resetTree],
-      expandedNodes: newExpanded,
-      // the key forces the component to restart
-      // so that the nodes metadata can be rebuilt with the new tree state
-      key: this.state.key + 1
+      expandedNodes: expandedNodes,
+      key: this.state.key + 1,
     });
   }
 
@@ -190,14 +136,15 @@ export class CustomTree extends React.Component {
       <div className="row mt-3 mb-3">
         <div className="col-6">
           <h6>
-            Manual Config - Custom Templates, Multi Selection with shift/ctrl keys
+            Manual Config - Custom Templates, Multi Selection with shift/ctrl
+            keys
             <Link
               href={
                 "https://github.com/PEsteves8/react-treekey/blob/master/examples/src/CustomTree.js"
               }
             />
           </h6>
-          <div style={{ height: "350px", overflowY: "auto" }}>
+          <div style={{ height: "400px", overflowY: "auto" }}>
             <TreeKey
               tree={this.state.tree}
               onSelectNode={this.onSelectNode}
@@ -214,11 +161,9 @@ export class CustomTree extends React.Component {
         <div className="col-6">
           <div>Name: {this.state.selectedNodes[0].name}</div>
           <div>Type: {this.state.selectedNodes[0].type}</div>
-         
-
 
           <div className="row mt-3">
-              <AddNode addNode={this.addNode} />
+            <AddNode addNode={this.addNode} />
           </div>
 
           <div className="row">
@@ -230,7 +175,6 @@ export class CustomTree extends React.Component {
             </button>
           </div>
 
-
           <div className="row mt-3">
             <button
               className="btn btn-sm btn-light"
@@ -241,7 +185,6 @@ export class CustomTree extends React.Component {
               console.log current tree state
             </button>
           </div>
-
         </div>
       </div>
     );

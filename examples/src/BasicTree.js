@@ -1,18 +1,7 @@
 import React from "react";
 import { treeA } from "./data";
 import { TreeKey } from "../../src";
-
-function Link({ href }) {
-  return (
-    <a
-      target={"_blank"}
-      href={href}
-      className={"btn btn-sm btn-outline-secondary"}
-    >
-      <i className={"fas fa-code"} />
-    </a>
-  );
-}
+import Link from './Link';
 
 export class BasicTree extends React.Component {
   constructor(props) {
