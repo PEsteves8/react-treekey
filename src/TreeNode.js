@@ -37,10 +37,13 @@ class TreeNode extends React.Component {
         paddingLeft = paddingLeft + 15;
       }
 
-      nodeTextStyles = { ...style.node.default, paddingLeft: paddingLeft + 'px' };
+      nodeTextStyles = {
+        ...style.node.default,
+        paddingLeft: paddingLeft + "px",
+      };
 
       if (isSelectedNode) {
-        nodeTextStyles = { ...nodeTextStyles, ...style.node.selected  };
+        nodeTextStyles = { ...nodeTextStyles, ...style.node.selected };
       }
     }
     const isExpanded = this.props.expandedNodes.includes(this.props.node);

@@ -59,7 +59,11 @@ export function multiselection() {
         result.push(currentNode);
       }
 
-      if (currentNode.children && currentNode.children.length > 0 && expandedNodes.includes(currentNode)) {
+      if (
+        currentNode.children &&
+        currentNode.children.length > 0 &&
+        expandedNodes.includes(currentNode)
+      ) {
         currentNode = currentNode.$firstChild;
       } else if (currentNode.$nextNode) {
         currentNode = currentNode.$nextNode;
@@ -145,6 +149,6 @@ export function multiselection() {
   }
 
   return {
-    getNodesUsingKeyModifiers
+    getNodesUsingKeyModifiers,
   };
 }

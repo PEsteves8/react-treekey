@@ -3,13 +3,12 @@ export default {
     outline: "none",
     paddingLeft: "18px",
     listStyle: "none",
-    
   },
   node: {
-    default: {  },
+    default: {},
     selected: {
       backgroundColor: "grey",
-    }
+    },
   },
   nodeToggleWrapper: {
     display: "inline-block",

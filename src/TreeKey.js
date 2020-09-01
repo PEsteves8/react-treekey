@@ -39,10 +39,10 @@ export class TreeKey extends React.Component {
 
   findFirstParentsNextNode(node) {
     if (!node.$parent) return;
-    
+
     if (node.$parent && node.$parent.$nextNode) {
       return node.$parent.$nextNode;
-    } 
+    }
 
     return this.findFirstParentsNextNode(node.$parent);
   }
@@ -128,7 +128,9 @@ export class TreeKey extends React.Component {
 
   updateExpandedNodes(node, shouldExpand) {
     let { expandedNodes } = this.state;
-    let result = shouldExpand ? [...expandedNodes, node] : expandedNodes.filter((n) => n !== node);
+    let result = shouldExpand
+      ? [...expandedNodes, node]
+      : expandedNodes.filter((n) => n !== node);
     return result;
   }
 
@@ -157,7 +159,8 @@ export class TreeKey extends React.Component {
       } else {
         this.selectNewNode(node.children[0]);
       }
-    } else if (node.children) { // if click event
+    } else if (node.children) {
+      // if click event
       expandedNodes = this.updateExpandedNodes(node, !isExpanded);
     }
 

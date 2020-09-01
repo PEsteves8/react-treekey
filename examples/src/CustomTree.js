@@ -2,8 +2,8 @@ import React from "react";
 import { treeB } from "./data";
 import { TreeKey } from "../../src";
 import AddNode from "./AddNode";
-import Link from "./Link";
-import { recoverNodeListsUsingIds } from './treeResetHelpers';
+
+import { recoverNodeListsUsingIds } from "./treeResetHelpers";
 
 export class CustomTree extends React.Component {
   constructor(props) {
@@ -47,15 +47,15 @@ export class CustomTree extends React.Component {
     this.setState({ expandedNodes });
   }
 
-   /*
-  * CRUD operations aren't natively supported by the component
-  * This is one somewhat hacky way (not particularly efficient) of attaining the same effect
-  * First filter/push/edit the nodes from the parent's children prop
-  * Then reset the tree references by stringifying and parsing it back
-  * Since, the references were lost, we run an helper to recover the new ones using the nodes' unique ids
-  * Increase the key property in setState, restarting the treekey component so it remaps the node relationships with this new tree
-  * If adding, increment the last node id, so we make sure every new added node is associated with a unique id
-  */
+  /*
+   * CRUD operations aren't natively supported by the component
+   * This is one somewhat hacky way (not particularly efficient) of attaining the same effect
+   * First filter/push/edit the nodes from the parent's children prop
+   * Then reset the tree references by stringifying and parsing it back
+   * Since, the references were lost, we run an helper to recover the new ones using the nodes' unique ids (or some other unique prop)
+   * Increment the 'key' property in setState, so the treekey component reinitializes remapping the node relationships with the new references
+   * If adding a new node, increment the last node id, so we make sure every new added node is associated with a unique id
+   */
   addNode(name, type) {
     event.preventDefault();
     let selectedNode = this.state.selectedNodes[0];
@@ -77,7 +77,7 @@ export class CustomTree extends React.Component {
     if (type === "folder") {
       newNode.children = [];
       newNode.className = classNames.folder;
-    } else if (newNode.name.startsWith('.git')) {
+    } else if (newNode.name.startsWith(".git")) {
       newNode.className = classNames.git;
     } else {
       newNode.className = classNames[fileExt] || classNames.other;
@@ -105,14 +105,14 @@ export class CustomTree extends React.Component {
       lastNodeId: newNodeId,
     });
   }
- 
+
   deleteSelectedNodes() {
     this.state.selectedNodes.forEach((node) => {
       if (node.$parent) {
-      node.$parent.children = node.$parent.children.filter(
-        (child) => child !== node
-      );
-    }
+        node.$parent.children = node.$parent.children.filter(
+          (child) => child !== node
+        );
+      }
     });
 
     let resetTree = JSON.parse(JSON.stringify(this.state.tree));
@@ -135,15 +135,6 @@ export class CustomTree extends React.Component {
     return (
       <div className="row mt-3 mb-3">
         <div className="col-6">
-          <h6>
-            Manual Config - Custom Templates, Multi Selection with shift/ctrl
-            keys
-            <Link
-              href={
-                "https://github.com/PEsteves8/react-treekey/blob/master/examples/src/CustomTree.js"
-              }
-            />
-          </h6>
           <div style={{ height: "400px", overflowY: "auto" }}>
             <TreeKey
               tree={this.state.tree}
