@@ -3,11 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "TreeComponent", {
+Object.defineProperty(exports, "TreeKey", {
   enumerable: true,
   get: function get() {
-    return _TreeComponent.TreeComponent;
+    return _TreeKey.TreeKey;
   }
 });
 
-var _TreeComponent = require("./TreeComponent.js");
+var _TreeKey = require("./TreeKey.js");
