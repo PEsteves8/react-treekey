@@ -43,7 +43,7 @@ describe("<TreeNodeToggle>", () => {
 
     expect(container.innerHTML).toMatchSnapshot();
     expect(template).toHaveBeenCalledTimes(1);
-    expect(template).toHaveBeenCalledWith(isExpanded);
+    expect(template).toHaveBeenCalledWith(isExpanded, mockNode);
   });
 
   test("calls default toggle if no template is given", () => {

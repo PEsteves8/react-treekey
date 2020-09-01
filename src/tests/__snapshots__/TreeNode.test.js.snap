@@ -1,5 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<TreeNode> should match snapshots 1`] = `"<li class=\\"\\"><div><span>some node</span></div></li>"`;
+exports[`<TreeNode> should match snapshots 1`] = `"<li class=\\"\\"><div><span style=\\"padding-left: 7px;\\">some node</span></div></li>"`;
 
-exports[`<TreeNode> should match snapshots 2`] = `"<li class=\\"treeview-selected-node\\"><div><span>some node</span></div></li>"`;
+exports[`<TreeNode> should match snapshots 2`] = `"<li class=\\"treeview-selected-node\\"><div><span style=\\"padding-left: 7px;\\">some node</span></div></li>"`;

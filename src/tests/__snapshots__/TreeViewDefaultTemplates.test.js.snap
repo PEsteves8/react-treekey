@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<TreeViewDefaultTemplates> should match default snapshot 1`] = `"<span>some node</span>"`;
+exports[`<TreeViewDefaultTemplates> should match default snapshot 1`] = `"<span style=\\"padding-left: 7px;\\">some node</span>"`;
 
 exports[`<TreeViewDefaultTemplates> should match default snapshot 2`] = `"<svg height=\\"10\\" width=\\"8\\"><polygon points=\\"0,0,0,10,8,5\\" style=\\"fill: white; stroke-width: 0; transform-origin: center; transform: rotate(90deg);\\"></polygon></svg>"`;
 
