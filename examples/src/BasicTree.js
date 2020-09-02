@@ -1,7 +1,6 @@
 import React from "react";
 import { treeA } from "./data";
 import { TreeKey } from "../../src";
-import Link from "./Link";
 
 export class BasicTree extends React.Component {
   constructor(props) {

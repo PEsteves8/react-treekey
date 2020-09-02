@@ -9,6 +9,17 @@ class App extends React.Component {
   render() {
     return (
       <div className="container-fluid">
+        <div className="ml-3 pt-3">
+          <h1>
+            React Treekey{" "}
+            <a
+              href="https://github.com/PEsteves8/react-treekey"
+              className="text-light float-right"
+            >
+              <i className="fab fa-github"></i>
+            </a>
+          </h1>
+        </div>
         <div className="ml-3 mt-3">
           <h5>
             Manual Config - Custom Templates, Multi Selection with shift/ctrl

@@ -220,11 +220,22 @@ export class TreeKey extends React.Component {
 }
 
 TreeKey.propTypes = {
-  tree: PropTypes.object,
+  tree: PropTypes.object.isRequired,
   onSelectNode: PropTypes.func,
   onExpandNode: PropTypes.func,
   selectedNodes: PropTypes.arrayOf(PropTypes.object),
   expandedNodes: PropTypes.arrayOf(PropTypes.object),
-  templates: PropTypes.objectOf(PropTypes.func),
+  templates: PropTypes.shape({
+    header: PropTypes.func,
+    toggle: PropTypes.func,
+  }),
   multiSelection: PropTypes.bool,
+  style: PropTypes.shape({
+    root: PropTypes.object,
+    node: PropTypes.object,
+    listItem: PropTypes.object,
+    nodeToggleWrapper: PropTypes.object,
+    nodeToggleSvg: PropTypes.object,
+    nestedList: PropTypes.object,
+  }),
 };

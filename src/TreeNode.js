@@ -30,7 +30,7 @@ class TreeNode extends React.Component {
     const isSelectedNode = this.props.selectedNodes.includes(this.props.node);
 
     let nodeTextStyles = {};
-
+    let listItemStyle = {};
     if (style) {
       let paddingLeft = 10 * this.props.indentValue;
       if (!this.props.node.children) {
@@ -45,12 +45,14 @@ class TreeNode extends React.Component {
       if (isSelectedNode) {
         nodeTextStyles = { ...nodeTextStyles, ...style.node.selected };
       }
+
+      listItemStyle = style.listItem;
     }
     const isExpanded = this.props.expandedNodes.includes(this.props.node);
     const templates = this.props.templates || {};
 
     return (
-      <li className={`${isSelectedNode ? "treeview-selected-node" : ""}`}>
+      <li style={listItemStyle} className={`${isSelectedNode ? "treeview-selected-node" : ""}`}>
         <div
           style={nodeTextStyles}
           onClick={this.onClick}

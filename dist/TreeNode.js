@@ -82,6 +82,7 @@ var TreeNode = /*#__PURE__*/function (_React$Component) {
       var style = this.props.style;
       var isSelectedNode = this.props.selectedNodes.includes(this.props.node);
       var nodeTextStyles = {};
+      var listItemStyle = {};
 
       if (style) {
         var paddingLeft = 10 * this.props.indentValue;
@@ -97,11 +98,14 @@ var TreeNode = /*#__PURE__*/function (_React$Component) {
         if (isSelectedNode) {
           nodeTextStyles = _objectSpread(_objectSpread({}, nodeTextStyles), style.node.selected);
         }
+
+        listItemStyle = style.listItem;
       }
 
       var isExpanded = this.props.expandedNodes.includes(this.props.node);
       var templates = this.props.templates || {};
       return /*#__PURE__*/_react["default"].createElement("li", {
+        style: listItemStyle,
         className: "".concat(isSelectedNode ? "treeview-selected-node" : "")
       }, /*#__PURE__*/_react["default"].createElement("div", {
         style: nodeTextStyles,

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function addNode({ addNode }) {
+export default function AddNode({ addNode }) {
   let [name, setName] = useState("some file.html");
   let [type, setType] = useState("file");
 

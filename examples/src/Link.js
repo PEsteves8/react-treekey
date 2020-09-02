@@ -4,11 +4,12 @@ import PropTypes from "prop-types";
 function Link({ href }) {
   return (
     <a
-      target={"_blank"}
+      target="_blank"
+      rel="noopener noreferrer"
       href={href}
-      className={"btn btn-sm btn-outline-secondary ml-2"}
+      className="btn btn-sm btn-outline-secondary ml-2"
     >
-      <i className={"fas fa-code"} />
+      <i className="fas fa-code" />
     </a>
   );
 }

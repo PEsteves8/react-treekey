@@ -57,7 +57,6 @@ export class CustomTree extends React.Component {
    * If adding a new node, increment the last node id, so we make sure every new added node is associated with a unique id
    */
   addNode(name, type) {
-    event.preventDefault();
     let selectedNode = this.state.selectedNodes[0];
     let newNodeId = this.state.lastNodeId + 1;
     let newNode = { name, type, id: newNodeId };

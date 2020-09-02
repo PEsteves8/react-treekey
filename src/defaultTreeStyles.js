@@ -10,6 +10,9 @@ export default {
       backgroundColor: "grey",
     },
   },
+  listItem: {
+    cursor: 'pointer',
+  },
   nodeToggleWrapper: {
     display: "inline-block",
     paddingLeft: "25px",
@@ -22,7 +25,6 @@ export default {
   },
   nestedList: {
     listStyle: "none",
-    //paddingLeft: "8px",
     paddingLeft: "0px",
   },
 };
